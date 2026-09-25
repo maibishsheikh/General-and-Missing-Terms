@@ -1,0 +1,74 @@
+/* ════════════════════════════════════════════
+   ScrollQuest Design Tokens
+   Grade 7 · General and Missing Terms
+   Archaeological Restoration Guild Theme
+   ════════════════════════════════════════════ */
+
+:root {
+  /* ── Core palette ── */
+  --color-bg: #14121e;
+  --color-surface: rgba(28, 25, 42, 0.85);
+  --color-surface-translucent: rgba(36, 32, 54, 0.65);
+  --color-primary: #d4a373;     /* relic parchment gold — CTAs, active states */
+  --color-secondary: #7f5539;   /* leather / terracotta — secondary elements */
+  --color-accent: #52b788;      /* emerald jade — correct restorations */
+  --color-error: #e76f51;       /* terracotta red — incorrect answers */
+  --color-text: #fefae0;        /* parchment cream */
+  --color-text-muted: rgba(254, 250, 224, 0.6);
+  --color-border: rgba(212, 163, 115, 0.25);
+
+  /* ── Aliases used across components ── */
+  --gold: #e9c46a;
+  --gold-light: #faedcd;
+  --gold-dark: #b08968;
+  --purple: #6d597a;
+  --purple-light: #9a8c98;
+  --green: #52b788;
+  --red: #e76f51;
+  --sand: #ddb892;
+  --parchment: #fefae0;
+  --parchment-dark: #b7b7a4;
+  --guild-amber: #e7c169;
+  --guild-bronze: #a68a64;
+
+  /* ── Character Theme Accents ── */
+  --char-1: #e07a5f;  /* Kavya: energetic amber-terracotta */
+  --char-2: #457b9d;  /* Hafiz: sharp indigo-slate */
+  --mascot: #2a9d8f;  /* Relic the Tortoise: wise jade-teal */
+
+  /* ── 10 World Accents (PRD §9 / TRD §9) ── */
+  --world-0: #C9A66B;   /* World 0: The First Fragment (sun-baked sand) */
+  --world-1: #8A5A44;   /* World 1: The Weathered Beginning (weathered clay) */
+  --world-2: #6B705C;   /* World 2: The Broken Ending (aged stone grey-green) */
+  --world-3: #A68A64;   /* World 3: Twin Gaps (dune tan) */
+  --world-4: #3D5A6C;   /* World 4: The Restoration Ledger (ink-blue ledger) */
+  --world-5: #B08968;   /* World 5: The Merchant's Missing Coin (coin bronze) */
+  --world-6: #7C6A46;   /* World 6: Choose Your Tool (tool-leather brown) */
+  --world-7: #CB9A4C;   /* World 7: Deriving the Master Key (relic gold) */
+  --world-8: #5C4B3A;   /* World 8: Double-Checking the Restoration (curator's desk brown) */
+  --world-9: #2B2118;   /* World 9: The Grand Archive Unveiling (deep archive black-brown) */
+
+  /* ── Typography ── */
+  --font-display: 'Cinzel Decorative', 'Cinzel', 'Fredoka', 'Nunito', system-ui, -apple-system, sans-serif;
+  --font-body: 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  --font-emoji: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+
+  /* ── Radii ── */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-pill: 999px;
+
+  /* ── Shadows ── */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 8px 28px rgba(0, 0, 0, 0.45);
+  --shadow-glow-gold: 0 0 24px rgba(233, 196, 106, 0.35);
+  --shadow-glow-relic: 0 0 30px rgba(203, 154, 76, 0.4);
+  --shadow-parchment: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(212, 163, 115, 0.15);
+
+  /* ── Transitions ── */
+  --transition-fast: 0.18s ease;
+  --transition-base: 0.3s ease;
+  --transition-spring: 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}

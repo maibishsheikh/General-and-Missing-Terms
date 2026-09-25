@@ -1,0 +1,342 @@
+/* src/components/shared/RestorationVisual.css */
+
+/* ── 1. Scroll Strip ── */
+.scroll-strip-container {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  margin: 12px auto;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 4px 6px;
+}
+
+.scroll-edge-left,
+.scroll-edge-right {
+  width: 18px;
+  background: linear-gradient(to right, #8a5a44, #c9a66b, #5c4b3a);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+  flex-shrink: 0;
+}
+
+.scroll-body {
+  background: radial-gradient(ellipse at center, rgba(46, 38, 30, 0.95) 0%, rgba(26, 22, 34, 0.98) 100%);
+  border-top: 2px solid var(--world-0);
+  border-bottom: 2px solid var(--world-0);
+  padding: 10px 14px;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+}
+
+.scroll-cells-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.scroll-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 58px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1.5px solid rgba(212, 163, 115, 0.25);
+  transition: var(--transition-fast);
+}
+
+.scroll-cell.cell-damaged {
+  background: rgba(231, 111, 81, 0.12);
+  border: 1.5px dashed rgba(231, 111, 81, 0.7);
+  box-shadow: 0 0 10px rgba(231, 111, 81, 0.2);
+}
+
+.scroll-cell.cell-intact {
+  background: rgba(201, 166, 107, 0.12);
+  border: 1.5px solid rgba(201, 166, 107, 0.4);
+}
+
+.scroll-cell.cell-highlight {
+  border-color: var(--gold);
+  box-shadow: 0 0 16px rgba(233, 196, 106, 0.5);
+  transform: scale(1.04);
+}
+
+.cell-pos-tag {
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  color: var(--sand);
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.cell-val {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.blank-glyph {
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: #f87171;
+  letter-spacing: 2px;
+}
+
+/* Compact version in Quiz */
+.scroll-strip-container.compact .scroll-cell {
+  min-width: 46px;
+  padding: 4px 6px;
+}
+.scroll-strip-container.compact .cell-val {
+  font-size: 1.05rem;
+}
+
+/* ── 2. Restoration Table ── */
+.restoration-table-wrap {
+  margin: 10px auto;
+  max-width: 100%;
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  border: 1.5px solid rgba(212, 163, 115, 0.3);
+  background: rgba(24, 21, 35, 0.9);
+  box-shadow: var(--shadow-sm);
+}
+
+.restoration-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table-th {
+  background: rgba(61, 90, 108, 0.35);
+  color: var(--sand);
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  padding: 8px 14px;
+  border-bottom: 1.5px solid rgba(212, 163, 115, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.table-td {
+  padding: 8px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.96rem;
+}
+
+.pos-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--sand);
+}
+
+.table-val {
+  font-family: var(--font-display);
+  font-weight: 800;
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+.blank-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #f87171;
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+/* ── 3. Tool Comparison ── */
+.tool-comparison-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 12px 0;
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .tool-comparison-wrap {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tool-column {
+  background: rgba(30, 26, 44, 0.85);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  transition: var(--transition-fast);
+}
+
+.tool-column.recommended-tool {
+  border-color: var(--gold);
+  background: rgba(203, 154, 76, 0.12);
+  box-shadow: 0 0 16px rgba(203, 154, 76, 0.25);
+}
+
+.tool-column-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tool-icon {
+  font-size: 1.5rem;
+}
+
+.tool-title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  color: #fff;
+  margin: 0;
+}
+
+.tool-meta {
+  font-size: 0.78rem;
+  color: var(--sand);
+}
+
+.winner-pill {
+  margin-left: auto;
+  font-size: 0.72rem;
+  font-weight: 800;
+  background: var(--gold);
+  color: #1a120b;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tool-working-box {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.working-step {
+  margin-bottom: 4px;
+}
+
+.working-calc {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  color: var(--gold-light);
+  margin-top: 6px;
+  padding-top: 4px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.15);
+}
+
+/* ── 4. Verification Check ── */
+.verification-wrap {
+  background: rgba(26, 22, 36, 0.9);
+  border: 1.5px solid rgba(212, 163, 115, 0.35);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  margin: 10px 0;
+}
+
+.verification-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.verify-badge-icon {
+  font-size: 1.6rem;
+}
+
+.verify-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: #fff;
+  margin: 0;
+}
+
+.verify-sub {
+  font-size: 0.78rem;
+  color: var(--sand);
+  margin: 0;
+}
+
+.verification-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.verify-col {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  text-align: center;
+}
+
+.verify-label {
+  display: block;
+  font-size: 0.76rem;
+  color: var(--sand);
+  margin-bottom: 4px;
+}
+
+.verify-num {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--gold);
+}
+
+.verify-status {
+  display: block;
+  font-size: 0.7rem;
+  color: #4ade80;
+  margin-top: 2px;
+}
+
+.verify-divider {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--sand);
+}
+
+.verification-verdict {
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  text-align: center;
+}
+
+.verdict-agree {
+  background: rgba(82, 183, 136, 0.15);
+  border: 1px solid rgba(82, 183, 136, 0.4);
+  color: #86efac;
+}
+
+.verdict-disagree {
+  background: rgba(231, 111, 81, 0.15);
+  border: 1px solid rgba(231, 111, 81, 0.4);
+  color: #fca5a5;
+}
