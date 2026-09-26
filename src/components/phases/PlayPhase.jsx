@@ -7,6 +7,7 @@ import BossBattleModal from '../quiz/BossBattleModal.jsx';
 import FeedbackOverlay from '../shared/FeedbackOverlay.jsx';
 import { useAudio } from '../../hooks/useAudio.js';
 import { DISTRICTS } from '../../data/questionBank.js';
+import { calcStars } from '../../utils/scoring.js';
 import {
   playQuestionNarration,
   playCorrectNarration,
@@ -154,50 +155,109 @@ export default function PlayPhase({ state, dispatch }) {
     );
   }
 
-  // District Map Screen
+  // District Map Screen (Worlds Board matching reference image)
   if (showMap) {
     const isAllDone = qIdx >= 100;
+    const totalStars = (state?.districtScores || []).reduce(
+      (acc, sc) => acc + (sc !== null && sc !== undefined ? calcStars(sc) : 0),
+      0
+    );
+
+    function handlePlayWorld(idx) {
+      sounds.click();
+      dispatch({ type: 'SELECT_DISTRICT', payload: idx });
+      setShowMap(false);
+    }
+
     return (
       <div className="play-map-wrap">
-        <div className="play-map-card glass-card">
-          <h2 className="play-map-title subheadline">🗺️ Ancient Artifact Worlds Archive</h2>
-          <p className="body-text" style={{ color: 'var(--text-secondary)', textAlign: 'center' }}>
-            {isAllDone ? (
-              <strong style={{ color: 'var(--gold)' }}>All 10 Artifact Restoration Worlds Certified!</strong>
-            ) : (
-              <>World {distIdx + 1}: <strong style={{ color: 'var(--gold)' }}>{district.name}</strong></>
-            )}
-          </p>
+        <div className="worlds-board-card">
+          {/* Top Notch Pill */}
+          <div className="worlds-card-notch" />
 
-          <KingdomMap
-            districtScores={state?.districtScores || []}
-            districtCorrect={state?.districtCorrect || []}
-            currentDistrict={isAllDone ? 10 : distIdx}
-            onSelectDistrict={(d) => {
-              if (d <= distIdx) {
-                setShowMap(false);
-              }
-            }}
-          />
+          {/* Header Row: Title & Subtitle on Left, Stars on Right */}
+          <div className="worlds-card-header">
+            <div className="worlds-title-group">
+              <h2 className="worlds-title">ScrollQuest Worlds</h2>
+              <p className="worlds-subtitle">
+                10 Themed Worlds · Need 4/10 Correct to Unlock Next World
+              </p>
+            </div>
 
-          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '10px' }}>
-            {!isAllDone ? (
-              <>
-                <button className="btn btn-primary" onClick={() => startDistrict(distIdx)}>
-                  🚀 Enter {district.name}!
-                </button>
-                <button className="btn btn-outline" onClick={() => setShowBoss(true)} style={{ borderColor: '#feca57', color: '#feca57' }}>
-                  👑 Challenge Boss ({district.boss.name})
-                </button>
-                <button className="btn btn-outline" onClick={() => dispatch({ type: 'SET_PHASE', payload: 'reflect' })}>
-                  📓 Jump to Reflect
-                </button>
-              </>
-            ) : (
-              <button className="btn btn-primary" onClick={() => setShowMap(false)}>
-                📊 View Results
-              </button>
-            )}
+            <div className="worlds-stars-pill">
+              <span className="star-icon">⭐</span>
+              <span className="star-count">{totalStars} / 30</span>
+            </div>
+          </div>
+
+          {/* 10 Worlds Grid (5 columns x 2 rows) */}
+          <div className="worlds-grid">
+            {DISTRICTS.map((dist, idx) => {
+              const isCurrent = idx === distIdx;
+              const isCompleted = state?.districtScores?.[idx] !== null && state?.districtScores?.[idx] !== undefined;
+              const prevCorrect = idx > 0 ? (state?.districtCorrect?.[idx - 1] || 0) : 10;
+              const isUnlocked = idx === 0 || idx <= distIdx || prevCorrect >= 4 || isCompleted;
+              const qStart = idx * 10 + 1;
+              const qEnd = (idx + 1) * 10;
+
+              return (
+                <div
+                  key={dist.id}
+                  className={`world-card ${isCurrent ? 'active' : ''} ${!isUnlocked ? 'locked' : ''} ${isCompleted ? 'completed' : ''}`}
+                  onClick={() => isUnlocked && handlePlayWorld(idx)}
+                  role="button"
+                  tabIndex={isUnlocked ? 0 : -1}
+                  aria-label={`${dist.name} ${isUnlocked ? 'Play' : 'Locked'}`}
+                >
+                  <div className="world-card-top">
+                    <span className="world-badge-w">W{idx + 1}</span>
+                    <span className="world-badge-q">Q{qStart}–{qEnd}</span>
+                  </div>
+
+                  <div className="world-card-center">
+                    {isUnlocked ? (
+                      <div className="world-target-icon">
+                        <svg width="34" height="34" viewBox="0 0 36 36" fill="none">
+                          <circle cx="18" cy="18" r="14" stroke="#00d26a" strokeWidth="2.5" />
+                          <circle cx="18" cy="18" r="8" stroke="#00d26a" strokeWidth="2.5" />
+                          <circle cx="18" cy="18" r="3" fill="#00d26a" />
+                        </svg>
+                      </div>
+                    ) : (
+                      <div className="world-lock-icon">
+                        🔒
+                      </div>
+                    )}
+                    <span className="world-name">{dist.name}</span>
+                  </div>
+
+                  <div className="world-card-bottom">
+                    {isUnlocked ? (
+                      <span className="world-action-play">Play →</span>
+                    ) : (
+                      <span className="world-action-locked">Locked</span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Bottom Action Buttons */}
+          <div className="worlds-card-footer">
+            <button
+              className="btn-boss-battle"
+              onClick={() => setShowBoss(true)}
+            >
+              <span>👑</span> Boss Battle: {district.boss?.name || 'The Crumbling Fragment'}
+            </button>
+
+            <button
+              className="btn-jump-reflect"
+              onClick={() => dispatch({ type: 'SET_PHASE', payload: 'reflect' })}
+            >
+              <span>📓</span> Jump to Reflect Phase →
+            </button>
           </div>
         </div>
 

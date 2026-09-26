@@ -108,33 +108,307 @@
   flex-direction: column;
 }
 
-/* Map Screen */
+/* ─── Worlds Board Map Screen (Reference Layout) ────────────────────────── */
 .play-map-wrap {
   flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(8px, 1.5vh, 18px) 16px;
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.worlds-board-card {
+  width: 100%;
+  max-width: 960px;
+  background: linear-gradient(180deg, #131936 0%, #0d1226 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.65), 0 0 40px rgba(0, 210, 106, 0.04);
+  padding: clamp(12px, 1.8vh, 22px) clamp(16px, 2.2vw, 28px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.4vh, 16px);
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* Glowing Green Top Notch */
+.worlds-card-notch {
+  width: 56px;
+  height: 4px;
+  background: #00d26a;
+  border-radius: 999px;
+  box-shadow: 0 0 12px rgba(0, 210, 106, 0.7);
+  margin: 0 auto -4px;
+  flex-shrink: 0;
+}
+
+/* Header Row: Title & Subtitle + Star Pill */
+.worlds-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  flex-wrap: nowrap;
+  gap: 12px;
+}
+
+.worlds-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.worlds-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 1.7vw, 1.65rem);
+  font-weight: 900;
+  color: #2dd4bf;
+  margin: 0;
+  letter-spacing: -0.3px;
+  text-shadow: 0 2px 10px rgba(45, 212, 191, 0.2);
+}
+
+.worlds-subtitle {
+  font-family: var(--font-body);
+  font-size: clamp(0.78rem, 0.9vw, 0.88rem);
+  color: #94a3b8;
+  font-weight: 500;
+  margin: 0;
+}
+
+.worlds-stars-pill {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(0.85rem, 0.95vw, 0.92rem);
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.worlds-stars-pill .star-icon {
+  color: #facc15;
+  font-size: 1rem;
+}
+
+/* 10 Worlds Grid (5 cols x 2 rows) */
+.worlds-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: clamp(8px, 1.1vw, 13px);
+  width: 100%;
+}
+
+.world-card {
+  background: rgba(20, 26, 52, 0.72);
+  border: 1.5px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  padding: clamp(8px, 1.2vh, 12px) clamp(8px, 1vw, 12px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-height: clamp(114px, 14.8vh, 136px);
+  text-align: center;
+  transition: all 0.22s ease;
+  user-select: none;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.world-card.active {
+  border: 1.5px solid #00d26a;
+  background: rgba(0, 210, 106, 0.04);
+  box-shadow: 0 0 16px rgba(0, 210, 106, 0.22);
+  cursor: pointer;
+}
+
+.world-card.active:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 210, 106, 0.35);
+}
+
+.world-card.completed {
+  border-color: rgba(34, 197, 94, 0.35);
+  background: rgba(34, 197, 94, 0.05);
+  cursor: pointer;
+}
+
+.world-card.completed:hover {
+  transform: translateY(-2px);
+  border-color: #22c55e;
+}
+
+.world-card.locked {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Top Row: W# & Q# */
+.world-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.world-badge-w {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #f8fafc;
+  font-family: var(--font-mono, monospace);
+}
+
+.world-badge-q {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #38bdf8;
+  font-family: var(--font-mono, monospace);
+}
+
+/* Center Content */
+.world-card-center {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  gap: 4px;
   width: 100%;
-  box-sizing: border-box;
+  margin: auto 0;
 }
 
-.play-map-card {
-  width: 100%;
-  max-width: 900px;
-  padding: 24px;
+.world-target-icon {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 12px;
-  box-sizing: border-box;
+  justify-content: center;
+  height: 34px;
+  filter: drop-shadow(0 0 8px rgba(0, 210, 106, 0.4));
 }
 
-.play-map-title {
-  color: var(--gold);
-  font-weight: 900;
+.world-lock-icon {
+  font-size: 1.45rem;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+}
+
+.world-name {
+  font-family: var(--font-display);
+  font-size: clamp(0.76rem, 0.88vw, 0.86rem);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.25;
   margin: 0;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Bottom Action */
+.world-card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.world-action-play {
+  color: #00d26a;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.84rem;
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+
+.world-card.active:hover .world-action-play {
+  transform: translateX(3px);
+}
+
+.world-action-locked {
+  color: #64748b;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Bottom Footer Action Buttons */
+.worlds-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: 100%;
+  margin-top: 2px;
+  flex-wrap: wrap;
+}
+
+.btn-boss-battle {
+  background: rgba(245, 158, 11, 0.12);
+  border: 1.5px solid rgba(245, 158, 11, 0.6);
+  color: #fbbf24;
+  border-radius: 999px;
+  padding: 7px 20px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-boss-battle:hover {
+  background: rgba(245, 158, 11, 0.22);
+  border-color: #f59e0b;
+  transform: translateY(-1px);
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.3);
+}
+
+.btn-jump-reflect {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+  border-radius: 999px;
+  padding: 7px 20px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-jump-reflect:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .worlds-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 /* Done Screen */
