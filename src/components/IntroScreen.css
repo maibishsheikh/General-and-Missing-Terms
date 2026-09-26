@@ -2,16 +2,17 @@
 
 .intro-wrap {
   width: 100%;
-  height: 100%;
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100vh;
+  height: 100dvh;
+  max-height: 100vh;
+  max-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(8px, 1.4vh, 14px);
-  padding: clamp(10px, 1.8vh, 20px) clamp(16px, 2.5vw, 32px);
-  background: radial-gradient(circle at center, #141738 0%, #0b0d1e 100%);
+  gap: clamp(6px, 1.2vh, 12px);
+  padding: clamp(8px, 1.5vh, 16px) clamp(16px, 2.5vw, 32px);
+  background: radial-gradient(circle at 50% 35%, #15193d 0%, #0c0e22 75%, #080916 100%);
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
@@ -29,7 +30,7 @@
   border-radius: 999px;
   padding: 5px 22px;
   color: #f8fafc;
-  font-size: clamp(0.8rem, 0.9vw, 0.86rem);
+  font-size: clamp(0.78rem, 0.88vw, 0.85rem);
   font-weight: 700;
   backdrop-filter: blur(8px);
   letter-spacing: 0.02em;
@@ -39,7 +40,7 @@
 
 /* ─── Main Title ─── */
 .intro-title {
-  font-size: clamp(2.4rem, 4vw, 3.4rem);
+  font-size: clamp(2.2rem, 3.8vw, 3.2rem);
   font-weight: 900;
   line-height: 1.05;
   margin: 0;
@@ -59,7 +60,7 @@
 /* ─── Subtitle ─── */
 .intro-subtitle {
   color: #fbbf24;
-  font-size: clamp(0.95rem, 1.25vw, 1.15rem);
+  font-size: clamp(0.9rem, 1.2vw, 1.1rem);
   font-weight: 700;
   margin: 0;
   text-align: center;
@@ -71,38 +72,42 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  max-width: 720px;
+  max-width: 740px;
   width: 100%;
-  margin: 4px 0 2px;
+  margin: 2px 0;
   position: relative;
 }
 
 .mascot-circle-avatar {
-  width: 48px;
-  height: 48px;
-  min-width: 48px;
+  width: 50px;
+  height: 50px;
+  min-width: 50px;
   background: radial-gradient(circle, #fde047 0%, #f59e0b 100%);
-  border: 2.5px solid rgba(255, 255, 255, 0.6);
+  border: 2.5px solid #ffffff;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.7rem;
-  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.35);
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.4);
   flex-shrink: 0;
 }
 
 .mascot-speech-bubble {
   background: #ffffff;
   color: #1e293b;
-  padding: 10px 18px;
+  padding: 9px 18px;
   border-radius: 18px;
-  font-size: clamp(0.85rem, 0.95vw, 0.92rem);
+  font-size: clamp(0.82rem, 0.92vw, 0.9rem);
   font-weight: 700;
   line-height: 1.4;
   position: relative;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
   flex: 1;
+}
+
+.formula-highlight {
+  color: #d97706;
+  font-weight: 800;
 }
 
 /* Speech Bubble Left Arrow */
@@ -121,21 +126,21 @@
 .intro-journey-card {
   width: 100%;
   max-width: 860px;
-  background: rgba(18, 23, 48, 0.75);
-  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  background: rgba(18, 23, 50, 0.85);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
   border-radius: 20px;
-  padding: clamp(14px, 1.8vh, 18px) clamp(16px, 2.2vw, 28px);
+  padding: clamp(12px, 1.6vh, 16px) clamp(16px, 2.2vw, 28px);
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(10px, 1.4vh, 14px);
+  gap: clamp(8px, 1.2vh, 12px);
   box-sizing: border-box;
 }
 
 .journey-card-header {
   color: #f59e0b;
-  font-size: clamp(0.72rem, 0.8vw, 0.8rem);
+  font-size: clamp(0.72rem, 0.8vw, 0.78rem);
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;

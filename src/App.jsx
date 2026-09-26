@@ -240,7 +240,7 @@ export default function App() {
         </header>
       )}
 
-      <main className="phase-content">
+      <main className={`phase-content ${state.phase === 'intro' ? 'intro-phase-content' : ''}`}>
         {state.phase === 'intro'    && <IntroScreen   state={state} dispatch={dispatch} />}
         {state.phase === 'wonder'   && <WonderPhase   state={state} dispatch={dispatch} />}
         {state.phase === 'story'    && <StoryPhase    state={state} dispatch={dispatch} />}

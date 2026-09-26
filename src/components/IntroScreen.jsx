@@ -5,8 +5,8 @@ import { generateSessionQuestions } from '../utils/shuffle.js';
 import questionBank from '../data/questionBank.js';
 
 const JOURNEY = [
-  { num: '01', icon: '🔍', label: 'Wonder',   sub: 'The Damaged Scroll', phase: 'wonder' },
-  { num: '02', icon: '📖', label: 'Story',    sub: 'Kavya, Hafiz & Relic', phase: 'story' },
+  { num: '01', icon: '🔍', label: 'Wonder',   sub: 'Telemetry signal alert', phase: 'wonder' },
+  { num: '02', icon: '📖', label: 'Story',    sub: 'Ishaan, Xin Yi & Orbit', phase: 'story' },
   { num: '03', icon: '🧪', label: 'Simulate', sub: '4 interactive labs', phase: 'simulate' },
   { num: '04', icon: '🎮', label: 'Practice', sub: '10 worlds & bosses', phase: 'play' },
   { num: '05', icon: '📓', label: 'Reflect',  sub: 'Review & scorecard', phase: 'reflect' },
@@ -32,16 +32,34 @@ export default function IntroScreen({ state, dispatch }) {
 
       {/* Subtitle in Golden Yellow */}
       <h2 className="intro-subtitle">
-        Master First Terms (a), Common Differences (d), and General Term Formulas
+        Master First Terms (a), Common Differences (d), and Trajectory Formulas
       </h2>
 
       {/* Mascot Speech Bubble Row */}
       <div className="intro-speech-row">
-        <div className="mascot-circle-avatar">
-          🐢
+        <div className="mascot-circle-avatar" title="Orbit">
+          <svg width="36" height="36" viewBox="0 0 44 44" fill="none">
+            {/* Top Antenna */}
+            <line x1="22" y1="11" x2="22" y2="4" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" />
+            <circle cx="22" cy="4" r="3.5" fill="#ef4444" stroke="#ffffff" strokeWidth="1.5" />
+            {/* Ears / Headset */}
+            <rect x="5" y="18" width="4" height="11" rx="2" fill="#38bdf8" stroke="#ffffff" strokeWidth="1.5" />
+            <rect x="35" y="18" width="4" height="11" rx="2" fill="#38bdf8" stroke="#ffffff" strokeWidth="1.5" />
+            {/* Head */}
+            <rect x="8" y="11" width="28" height="25" rx="7" fill="#ffffff" stroke="#cbd5e1" strokeWidth="1.5" />
+            {/* Screen / Visor */}
+            <rect x="12" y="15" width="20" height="13" rx="4" fill="#0f172a" />
+            {/* Eyes */}
+            <circle cx="17" cy="21.5" r="2.8" fill="#38bdf8" />
+            <circle cx="17.8" cy="20.7" r="1" fill="#ffffff" />
+            <circle cx="27" cy="21.5" r="2.8" fill="#38bdf8" />
+            <circle cx="27.8" cy="20.7" r="1" fill="#ffffff" />
+            {/* Mouth */}
+            <line x1="19" y1="31" x2="25" y2="31" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" />
+          </svg>
         </div>
         <div className="mascot-speech-bubble">
-          Hi! I'm Relic. The Guild's ancient number-scrolls are damaged! Check every gap, formulate general terms with T<sub>n</sub> = a + (n − 1)d, and calibrate restorations to save the archive! 📜 🏺
+          Hi! I'm Orbit. Nova-7's telemetry stream is corrupted! Check every gap, formulate general terms with <span className="formula-highlight">T<sub>n</sub> = a + (n - 1)d</span>, and calibrate trajectories to save the mission! 🚀 📡
         </div>
       </div>
 
@@ -89,7 +107,7 @@ export default function IntroScreen({ state, dispatch }) {
           <span>100 Questions</span>
         </div>
         <div className="feature-pill">
-          <span className="fp-icon">📊</span>
+          <span className="fp-icon">📈</span>
           <span>Sequences &amp; AP</span>
         </div>
         <div className="feature-pill">
