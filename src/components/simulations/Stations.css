@@ -1091,3 +1091,399 @@
   color: #fca5a5;
 }
 
+/* ─── NEW: Story Context Banner ─────────────────────────────────────────── */
+.sim-story-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(201, 166, 107, 0.12);
+  border: 1.5px solid rgba(201, 166, 107, 0.35);
+  border-radius: 14px;
+  padding: 10px 14px;
+  flex-shrink: 0;
+}
+.sim-story-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.sim-story-text {
+  font-size: 0.9rem;
+  color: #e2d5c3;
+  line-height: 1.5;
+  margin: 0;
+  font-weight: 600;
+}
+
+/* ─── NEW: Dig Site Grid (Station A) ────────────────────────────────────── */
+.dig-site-grid {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 0;
+}
+.tile-dig-row {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-end;
+}
+.dig-tile-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.dig-pos-label {
+  font-size: 0.8rem;
+  color: #a0a0b8;
+  font-weight: 800;
+}
+.dig-tile {
+  width: 80px;
+  height: 80px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.dig-tile.buried {
+  background: linear-gradient(135deg, #c9a66b 0%, #8a6a3a 100%);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  animation: sandShimmer 2s ease-in-out infinite;
+}
+.dig-tile.buried:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 20px rgba(201, 166, 107, 0.5);
+}
+.dig-tile.uncovered {
+  background: rgba(74, 222, 128, 0.15);
+  border-color: #4ade80;
+  cursor: default;
+}
+.dig-tile.gap-tile {
+  background: rgba(239, 68, 68, 0.12);
+  border: 2px dashed rgba(239, 68, 68, 0.5);
+  cursor: default;
+}
+.tile-value {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #4ade80;
+  font-family: var(--font-display);
+}
+.sand-cover {
+  font-size: 2rem;
+  position: relative;
+}
+.gap-question {
+  font-size: 2rem;
+  color: #ef4444;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+.dust-particle {
+  position: absolute;
+  background: rgba(201, 166, 107, 0.6);
+  border-radius: 50%;
+  animation: floatDust 3s ease-in-out infinite;
+}
+
+@keyframes sandShimmer {
+  0%, 100% { box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4); }
+  50% { box-shadow: 0 4px 20px rgba(201, 166, 107, 0.5); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.9); }
+}
+@keyframes floatDust {
+  0%, 100% { transform: translate(0, 0); opacity: 0.6; }
+  50% { transform: translate(5px, -8px); opacity: 0.2; }
+}
+
+/* ─── NEW: Tile Strip Display (Station A - Analyze) ─────────────────────── */
+.tile-strip-display {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 8px 0;
+}
+.strip-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  min-width: 56px;
+}
+.strip-tile.known {
+  background: rgba(74, 222, 128, 0.15);
+  border: 1.5px solid rgba(74, 222, 128, 0.4);
+}
+.strip-tile.missing {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1.5px dashed rgba(239, 68, 68, 0.5);
+}
+.strip-pos {
+  font-size: 0.75rem;
+  color: #a0a0b8;
+  font-weight: 700;
+}
+.strip-val {
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #fff;
+  font-family: var(--font-display);
+}
+
+/* ─── NEW: Pattern Analysis Box ─────────────────────────────────────────── */
+.pattern-analysis-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.pattern-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.pattern-label {
+  color: #a0a0b8;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+.pattern-value {
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 900;
+  font-family: var(--font-display);
+}
+.near-badge {
+  color: #4ade80 !important;
+  background: rgba(74, 222, 128, 0.15);
+  padding: 2px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(74, 222, 128, 0.4);
+}
+.far-badge {
+  color: #fbbf24 !important;
+  background: rgba(251, 191, 36, 0.15);
+  padding: 2px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(251, 191, 36, 0.4);
+}
+
+/* ─── NEW: Monument Display (Station B) ─────────────────────────────────── */
+.monument-display {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  padding: 10px 0;
+}
+.monument-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.column-shaft {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(180deg, rgba(196, 180, 150, 0.3) 0%, rgba(150, 130, 100, 0.2) 100%);
+  border: 2px solid rgba(196, 180, 150, 0.4);
+  border-radius: 8px;
+  padding: 8px 14px;
+  min-width: 56px;
+}
+.column-capital, .column-base {
+  font-size: 0.7rem;
+  color: rgba(196, 180, 150, 0.6);
+}
+.column-value {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #fcd34d;
+  font-family: var(--font-display);
+  min-height: 30px;
+  display: flex;
+  align-items: center;
+}
+.monument-column.damaged .column-shaft {
+  border-color: rgba(239, 68, 68, 0.5);
+  border-style: dashed;
+  background: rgba(239, 68, 68, 0.08);
+}
+.monument-column.damaged .column-value {
+  color: #ef4444;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+.column-label {
+  font-size: 0.78rem;
+  color: #a0a0b8;
+  font-weight: 700;
+}
+
+/* ─── Storm Overlay (Station B) ─────────────────────────────────────────── */
+.storm-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+    rgba(194, 167, 110, 0.3) 0%,
+    rgba(139, 110, 65, 0.4) 50%,
+    rgba(194, 167, 110, 0.2) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 0.5s ease;
+  border-radius: inherit;
+}
+
+/* ─── Working Textarea ──────────────────────────────────────────────────── */
+.working-textarea {
+  width: 100%;
+  background: rgba(15, 15, 45, 0.8);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 8px 12px;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  resize: vertical;
+  outline: none;
+  box-sizing: border-box;
+}
+.working-textarea:focus {
+  border-color: var(--gold);
+}
+
+/* ─── Calendar Grid (Station C) ─────────────────────────────────────────── */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin: 8px 0;
+}
+.calendar-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 6px;
+  border-radius: 12px;
+  text-align: center;
+}
+.calendar-cell.intact {
+  background: rgba(74, 222, 128, 0.1);
+  border: 1.5px solid rgba(74, 222, 128, 0.3);
+}
+.calendar-cell.damaged {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1.5px dashed rgba(239, 68, 68, 0.4);
+}
+.calendar-cell.restored {
+  background: rgba(74, 222, 128, 0.2);
+  border: 1.5px solid rgba(74, 222, 128, 0.5);
+}
+.cal-month {
+  font-size: 0.72rem;
+  color: #a0a0b8;
+  font-weight: 700;
+}
+.cal-value {
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: #fff;
+  font-family: var(--font-display);
+}
+.calendar-cell.damaged .cal-value {
+  color: #ef4444;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.ledger-section {
+  margin-top: 10px;
+}
+.ledger-title {
+  color: #feca57;
+  font-size: 0.85rem;
+  font-weight: 800;
+  margin: 0 0 6px 0;
+}
+.ledger-cell {
+  max-width: 140px;
+}
+
+/* ─── Evidence Box (Station D) ──────────────────────────────────────────── */
+.evidence-box {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 179, 0, 0.25);
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin: 8px 0;
+}
+.evidence-title {
+  color: #feca57;
+  font-size: 0.85rem;
+  font-weight: 800;
+  margin: 0 0 8px 0;
+}
+.evidence-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.evidence-label {
+  color: #a0a0b8;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  min-width: 65px;
+}
+.evidence-value {
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* ─── Real World Lesson Card ────────────────────────────────────────────── */
+.real-world-lesson {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(59, 130, 246, 0.12);
+  border: 1.5px solid rgba(59, 130, 246, 0.35);
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-top: 8px;
+}
+.lesson-icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+.lesson-text {
+  font-size: 0.85rem;
+  color: #93c5fd;
+  line-height: 1.5;
+  margin: 0;
+  font-weight: 600;
+  font-style: italic;
+}
+

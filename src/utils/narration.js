@@ -58,19 +58,19 @@ export function simStationIntro(stationIdx) {
   const intros = [
     [
       instruct("Welcome to Station A — The Excavation Table!"),
-      instruct("Drag the gap slider to compare term-to-term checking and the general term formula side-by-side. See how the faster tool changes as the gap moves further away!"),
+      instruct("You're at a real archaeological dig site! Uncover buried mosaic tiles, discover the number pattern, and restore the missing tile. Choose whether term-to-term stepping or the general term formula is fastest!"),
     ],
     [
       instruct("Welcome to Station B — Race Against the Sandstorm!"),
-      instruct("A visual sandstorm is sweeping across the artifact! Select the efficient tool — would term-to-term checking or the general term be faster here? Then enter the restored number before the sand settles!"),
+      instruct("Ancient monuments are being threatened by an approaching sandstorm! Each round features a real archaeological structure — temple columns, obelisk markers, aqueduct gates. Restore the missing measurements before the storm buries them forever!"),
     ],
     [
-      instruct("Welcome to Station C — The Full Composite Restoration!"),
-      instruct("An ancient composite artifact contains three different missing terms: an early gap, a middle gap, and a tabular ledger entry. Restore each gap and cross-verify your answer two different ways to certify the artifact!"),
+      instruct("Welcome to Station C — Museum Curator's Workshop!"),
+      instruct("You're the lead curator restoring a Babylonian lunar ceremony calendar. The tablet has three types of damage: a faded opening, water stains, and a cracked ledger extension. Restore each entry and cross-verify using both methods!"),
     ],
     [
-      instruct("Welcome to Station D — The Forger's Fake Restoration!"),
-      instruct("A rival restorer submitted claimed restorations containing hidden mathematical flaws. Inspect each step, tap the flawed step, and certify the correct Guild fix!"),
+      instruct("Welcome to Station D — Fraud Inspector Bureau!"),
+      instruct("Three suspected forgeries have been submitted to the Guild! Examine each case file, identify the mathematical flaw in the restoration work, and select the correct fix. Real archaeologists face these exact traps!"),
     ],
   ];
 

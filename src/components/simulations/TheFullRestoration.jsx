@@ -1,282 +1,283 @@
 // src/components/simulations/TheFullRestoration.jsx
-// Station C: The Full Restoration (Multi-Step / Composite Construction)
-// Comprehensive archaeological challenge combining early gap, middle gap, tabular gap, and cross-verification
+// Station C: The Full Restoration — Museum Curator's Workshop
+// Students act as museum curators restoring a complete ancient calendar tablet.
+// Inspired by real museum restoration of Babylonian astronomical tablets.
 
 import React, { useState } from 'react';
 import './Stations.css';
-import RestorationVisual from '../shared/RestorationVisual.jsx';
 import { useAudio } from '../../hooks/useAudio.js';
-import { crossVerifyGap } from '../../utils/restorationMath.js';
+import { crossVerifyGap, EFFICIENCY_THRESHOLD } from '../../utils/restorationMath.js';
 
-// Composite Artifact with a = 6, d = 4:
-// n=1: Blank (Early Gap) -> value 6
-// n=2: 10
-// n=3: 14
-// n=4: Blank (Middle Gap) -> value 18
-// n=5: 22
-// Tabular Ledger Section:
-// Position 5 = 22, Position 8 = Blank -> value 34
+// Real-world: Babylonian lunar calendar tablet with 3 damaged entries
 const A = 6;
 const D = 4;
+
+const GAPS = [
+  {
+    id: 1,
+    title: 'Faded Opening — Month 1',
+    context: 'The first entry of the calendar is too faded to read. You can see Month 2 shows 10 ceremonies and Month 3 shows 14 ceremonies.',
+    targetPos: 1,
+    correctVal: 6,
+    knownInfo: 'Month 2 = 10, Month 3 = 14',
+    bestTool: 'term-to-term',
+    reasoning: 'Month 1 is just 1 step back from Month 2 (10). Subtract d = 4 once: 10 − 4 = 6.',
+    icon: '📅',
+  },
+  {
+    id: 2,
+    title: 'Water Damage — Month 4',
+    context: 'Water stains obscure the Month 4 entry. Month 3 reads 14 ceremonies and Month 5 reads 22.',
+    targetPos: 4,
+    correctVal: 18,
+    knownInfo: 'Month 3 = 14, Month 5 = 22',
+    bestTool: 'term-to-term',
+    reasoning: 'Month 4 is sandwiched between Month 3 (14) and Month 5 (22). Just add d = 4 to 14: 14 + 4 = 18.',
+    icon: '💧',
+  },
+  {
+    id: 3,
+    title: 'Cracked Ledger — Month 8',
+    context: 'The tax ledger extension records ceremony counts for later months. Month 5 is 22, but the Month 8 entry on a separate clay fragment is cracked.',
+    targetPos: 8,
+    correctVal: 34,
+    knownInfo: 'Month 1 = 6, d = +4, or Month 5 = 22',
+    bestTool: 'general-term',
+    reasoning: 'Month 8 is 5 steps from Month 3 (too far for stepping). Use formula: T_8 = 6 + (8-1)×4 = 6 + 28 = 34.',
+    icon: '🧩',
+  },
+];
 
 export default function TheFullRestoration({ onComplete, audioEnabled }) {
   const { narrate, stopAll, sounds } = useAudio(audioEnabled);
 
-  // Status for each of the 3 gaps
-  const [activeStep, setActiveStep] = useState(1); // 1, 2, or 3
-  const [inputs, setInputs] = useState({ 1: '', 2: '', 3: '' });
-  const [tools, setTools] = useState({ 1: null, 2: null, 3: null });
-  const [verified, setVerified] = useState({ 1: false, 2: false, 3: false });
+  const [activeGap, setActiveGap] = useState(0);
+  const [inputs, setInputs] = useState({ 0: '', 1: '', 2: '' });
+  const [tools, setTools] = useState({ 0: null, 1: null, 2: null });
+  const [crossVerifyInputs, setCrossVerifyInputs] = useState({ 0: '', 1: '', 2: '' });
+  const [verified, setVerified] = useState({ 0: false, 1: false, 2: false });
   const [feedback, setFeedback] = useState(null);
   const [success, setSuccess] = useState(false);
 
-  // Artifact Sequence for live display
-  const sequenceData = [
-    { position: 1, value: verified[1] ? 6 : null, isBlank: !verified[1] },
-    { position: 2, value: 10, isBlank: false },
-    { position: 3, value: 14, isBlank: false },
-    { position: 4, value: verified[2] ? 18 : null, isBlank: !verified[2] },
-    { position: 5, value: 22, isBlank: false },
+  // Calendar display
+  const calendarEntries = [
+    { month: 1, val: verified[0] ? 6 : null, status: verified[0] ? 'restored' : 'damaged' },
+    { month: 2, val: 10, status: 'intact' },
+    { month: 3, val: 14, status: 'intact' },
+    { month: 4, val: verified[1] ? 18 : null, status: verified[1] ? 'restored' : 'damaged' },
+    { month: 5, val: 22, status: 'intact' },
   ];
 
-  const ledgerData = [
-    { position: 5, value: 22 },
-    { position: 8, value: verified[3] ? 34 : null, isBlank: !verified[3] },
-  ];
+  const ledgerEntry = { month: 8, val: verified[2] ? 34 : null, status: verified[2] ? 'restored' : 'damaged' };
 
-  function handleVerifyStep(step) {
+  function handleVerify(gapIdx) {
     stopAll();
-    const val = Number(inputs[step]?.trim());
-    const tool = tools[step];
+    const gap = GAPS[gapIdx];
+    const val = Number(inputs[gapIdx]?.trim());
+    const tool = tools[gapIdx];
+    const crossVal = Number(crossVerifyInputs[gapIdx]?.trim());
 
     if (!tool) {
       sounds.wrong();
-      setFeedback({ type: 'error', text: 'Select an archaeological tool before verifying!' });
+      setFeedback({ type: 'error', text: '⚠️ Select a restoration tool first!' });
       return;
     }
-
-    if (isNaN(val)) {
+    if (isNaN(val) || inputs[gapIdx]?.trim() === '') {
       sounds.wrong();
-      setFeedback({ type: 'error', text: 'Enter a valid number for this restoration!' });
+      setFeedback({ type: 'error', text: '⚠️ Enter the restored value!' });
       return;
     }
 
-    let correctVal = 0;
-    let targetPos = 1;
-    let expectedTool = 'term-to-term';
-
-    if (step === 1) {
-      correctVal = 6;
-      targetPos = 1;
-      expectedTool = 'term-to-term';
-    } else if (step === 2) {
-      correctVal = 18;
-      targetPos = 4;
-      expectedTool = 'term-to-term';
-    } else if (step === 3) {
-      correctVal = 34;
-      targetPos = 8;
-      expectedTool = 'general-term';
-    }
-
-    // Run cross-verification check
-    const isMathValid = crossVerifyGap(sequenceData, targetPos, val, A, D);
-
-    if (isMathValid && val === correctVal) {
-      sounds.correct();
-      const newVerified = { ...verified, [step]: true };
-      setVerified(newVerified);
-      setFeedback({
-        type: 'success',
-        text: `Gap ${step} certified! Both Term-to-Term and General Term agree on value ${val}!`,
-      });
-      narrate([{ text: `Gap ${step} restored and cross-verified!`, style: 'celebration' }]);
-
-      if (step < 3) {
-        setTimeout(() => {
-          setActiveStep(step + 1);
-          setFeedback(null);
-        }, 1200);
-      } else if (newVerified[1] && newVerified[2] && newVerified[3]) {
-        setSuccess(true);
-      }
-    } else {
+    // Check primary answer
+    if (val !== gap.correctVal) {
       sounds.wrong();
       setFeedback({
         type: 'error',
-        text: `Cross-verification failed! The value ${val} does not agree with both methods. Check common difference d = +4.`,
+        text: `❌ Value ${val} doesn't fit the pattern. ${gap.reasoning}`,
       });
+      return;
+    }
+
+    // Check cross-verification (must also be correct or empty)
+    if (crossVerifyInputs[gapIdx]?.trim() && crossVal !== gap.correctVal) {
+      sounds.wrong();
+      setFeedback({
+        type: 'error',
+        text: `Cross-verification mismatch! Your primary answer (${val}) and cross-check (${crossVal}) don't agree. Both methods should give the same result.`,
+      });
+      return;
+    }
+
+    // Success for this gap
+    sounds.correct();
+    const newVerified = { ...verified, [gapIdx]: true };
+    setVerified(newVerified);
+    setFeedback({
+      type: 'success',
+      text: `✅ Month ${gap.targetPos} = ${gap.correctVal} certified! ${gap.reasoning}`,
+    });
+    narrate([{ text: `Gap ${gapIdx + 1} restored and certified by the museum board!`, style: 'celebration' }]);
+
+    // Auto-advance to next gap
+    if (gapIdx < 2 && !newVerified[gapIdx + 1]) {
+      setTimeout(() => {
+        setActiveGap(gapIdx + 1);
+        setFeedback(null);
+      }, 1200);
+    }
+
+    // Check if all done
+    if (newVerified[0] && newVerified[1] && newVerified[2]) {
+      setTimeout(() => setSuccess(true), 1000);
     }
   }
 
+  if (success) {
+    return (
+      <div className="station-wrap">
+        <div className="station-success anim-bounce-in" style={{ maxWidth: 520, margin: '40px auto' }}>
+          <span className="success-icon" style={{ fontSize: '3rem' }}>🏛️</span>
+          <p className="station-success-msg">
+            The complete Babylonian Calendar Tablet is restored! You handled faded openings, water damage, and cracked fragments — using both near-gap and far-gap techniques with cross-verification!
+          </p>
+          <div className="station-success-actions">
+            <button className="btn-green" onClick={onComplete}>Complete Station ✓</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const gap = GAPS[activeGap];
+
   return (
     <div className="station-wrap">
-      {/* Station Header */}
+      {/* Header */}
       <div className="station-header">
-        <h3 className="station-title">🏛️ Station C: The Full Composite Restoration</h3>
+        <h3 className="station-title">🏛️ Station C: Museum Curator's Workshop</h3>
         <div className="station-target-box">
-          <span className="station-target-label">Gaps Certified:</span>
+          <span className="station-target-label">Fragments Certified:</span>
           <span className="station-target-num">
-            {[verified[1], verified[2], verified[3]].filter(Boolean).length} / 3
+            {Object.values(verified).filter(Boolean).length} / 3
           </span>
         </div>
       </div>
 
+      {/* Story Context */}
+      <div className="sim-story-banner">
+        <span className="sim-story-icon">🏛️</span>
+        <p className="sim-story-text">
+          You're the lead curator restoring a Babylonian lunar ceremony calendar. The tablet records a growing number of ceremonies each month (a = {A}, d = +{D}). Three entries are damaged.
+        </p>
+      </div>
+
       <div className="station-grid-2col">
-        {/* Left Column: Live Composite Artifact Display */}
+        {/* Left: Calendar Display */}
         <div className="station-col-left">
           <div className="station-panel-box">
-            <h4 className="panel-subhead">Composite Artifact: Royal Dynasty Scroll &amp; Ledger</h4>
-            <p className="panel-caption">Known core sequence: a = 6, d = +4 · Formula: T_n = 4n + 2</p>
-
-            {/* Scroll Part */}
-            <div className="composite-scroll-part">
-              <span className="part-tag">Part 1: Ancient Scroll Fragment (Gaps 1 &amp; 2)</span>
-              <RestorationVisual
-                type="scroll-strip"
-                data={{
-                  sequence: sequenceData,
-                  blankIndices: [verified[1] ? null : 1, verified[2] ? null : 4].filter(Boolean),
-                }}
-                compact={false}
-              />
+            <h4 className="panel-subhead">📅 Ceremony Calendar Tablet</h4>
+            <div className="calendar-grid">
+              {calendarEntries.map(entry => (
+                <div key={entry.month} className={`calendar-cell ${entry.status}`}>
+                  <span className="cal-month">Month {entry.month}</span>
+                  <span className="cal-value">
+                    {entry.val !== null ? `${entry.val} ⛩️` : '???'}
+                  </span>
+                </div>
+              ))}
             </div>
 
-            {/* Ledger Part */}
-            <div className="composite-ledger-part">
-              <span className="part-tag">Part 2: Royal Archive Ledger (Gap 3: Position 8)</span>
-              <RestorationVisual
-                type="restoration-table"
-                data={{
-                  rows: ledgerData,
-                  columns: ['Record Position (n)', 'Certified Value (T_n)'],
-                }}
-                compact={true}
-              />
+            <div className="ledger-section">
+              <h5 className="ledger-title">📜 Tax Ledger Extension</h5>
+              <div className={`calendar-cell ledger-cell ${ledgerEntry.status}`}>
+                <span className="cal-month">Month {ledgerEntry.month}</span>
+                <span className="cal-value">{ledgerEntry.val !== null ? `${ledgerEntry.val} ⛩️` : '???'}</span>
+              </div>
+            </div>
+
+            {/* Gap Selector Tabs */}
+            <div className="step-pills-row" style={{ marginTop: 14 }}>
+              {GAPS.map((g, idx) => (
+                <button
+                  key={g.id}
+                  className={`step-pill ${activeGap === idx ? 'active' : ''} ${verified[idx] ? 'done' : ''}`}
+                  onClick={() => { sounds.click(); setActiveGap(idx); setFeedback(null); }}
+                >
+                  {verified[idx] ? '✅' : g.icon} {g.title.split('—')[0].trim()}
+                </button>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Right Column: Step-by-Step Restoration & Cross-Verification */}
+        {/* Right: Current Gap Restoration */}
         <div className="station-col-right">
           <div className="station-panel-box">
-            {/* Step Selector Tabs */}
-            <div className="step-pills-row">
+            <h4 className="panel-subhead">{gap.icon} {gap.title}</h4>
+            <p className="panel-caption">{gap.context}</p>
+            <p className="panel-caption" style={{ color: '#feca57' }}>
+              Known: {gap.knownInfo}
+            </p>
+          </div>
+
+          <div className="station-panel-box">
+            <h4 className="panel-subhead">🛠️ Primary Restoration Tool</h4>
+            <div className="tool-select-mini-row">
               <button
-                className={`step-pill ${activeStep === 1 ? 'active' : ''} ${verified[1] ? 'done' : ''}`}
-                onClick={() => { sounds.click(); setActiveStep(1); }}
+                className={`btn-tool-mini ${tools[activeGap] === 'term-to-term' ? 'active' : ''}`}
+                onClick={() => { sounds.click(); setTools({ ...tools, [activeGap]: 'term-to-term' }); }}
+                disabled={verified[activeGap]}
               >
-                {verified[1] ? '✅' : '1.'} Early Gap (n=1)
+                🖌️ Term-to-Term
               </button>
               <button
-                className={`step-pill ${activeStep === 2 ? 'active' : ''} ${verified[2] ? 'done' : ''}`}
-                onClick={() => { sounds.click(); setActiveStep(2); }}
+                className={`btn-tool-mini ${tools[activeGap] === 'general-term' ? 'active' : ''}`}
+                onClick={() => { sounds.click(); setTools({ ...tools, [activeGap]: 'general-term' }); }}
+                disabled={verified[activeGap]}
               >
-                {verified[2] ? '✅' : '2.'} Middle Gap (n=4)
+                📜 General Term
               </button>
-              <button
-                className={`step-pill ${activeStep === 3 ? 'active' : ''} ${verified[3] ? 'done' : ''}`}
-                onClick={() => { sounds.click(); setActiveStep(3); }}
-              >
-                {verified[3] ? '✅' : '3.'} Ledger Gap (n=8)
-              </button>
-            </div>
-
-            {/* Active Step Content */}
-            <div className="active-step-body">
-              {activeStep === 1 && (
-                <div>
-                  <h4 className="active-step-title">Gap 1: Faded Opening at Position n = 1</h4>
-                  <p className="panel-caption">
-                    Known: Position 2 is <strong>10</strong>, Position 3 is <strong>14</strong>. Reason backward!
-                  </p>
-                </div>
-              )}
-              {activeStep === 2 && (
-                <div>
-                  <h4 className="active-step-title">Gap 2: Missing Middle at Position n = 4</h4>
-                  <p className="panel-caption">
-                    Known: Position 3 is <strong>14</strong>, Position 5 is <strong>22</strong>. Step forward!
-                  </p>
-                </div>
-              )}
-              {activeStep === 3 && (
-                <div>
-                  <h4 className="active-step-title">Gap 3: Far Ledger Entry at Position n = 8</h4>
-                  <p className="panel-caption">
-                    Position 8 is far from position 5. Use General Term T_8 = 6 + (8 − 1)(4)!
-                  </p>
-                </div>
-              )}
-
-              {/* Tool Selection for current gap */}
-              <div className="tool-select-mini-row">
-                <button
-                  className={`btn-tool-mini ${tools[activeStep] === 'term-to-term' ? 'active' : ''}`}
-                  onClick={() => { sounds.click(); setTools({ ...tools, [activeStep]: 'term-to-term' }); }}
-                  disabled={verified[activeStep]}
-                >
-                  🖌️ Term-to-Term
-                </button>
-                <button
-                  className={`btn-tool-mini ${tools[activeStep] === 'general-term' ? 'active' : ''}`}
-                  onClick={() => { sounds.click(); setTools({ ...tools, [activeStep]: 'general-term' }); }}
-                  disabled={verified[activeStep]}
-                >
-                  📜 General Term
-                </button>
-              </div>
-
-              {/* Numeric Input & Cross-Verify Button */}
-              <div className="number-input-row" style={{ marginTop: '8px' }}>
-                <input
-                  type="number"
-                  placeholder="Restored number..."
-                  value={inputs[activeStep] || ''}
-                  onChange={(e) => setInputs({ ...inputs, [activeStep]: e.target.value })}
-                  disabled={verified[activeStep]}
-                  className="sandstorm-input"
-                  aria-label={`Restored value for Gap ${activeStep}`}
-                />
-                <button
-                  className="btn-primary"
-                  onClick={() => handleVerifyStep(activeStep)}
-                  disabled={verified[activeStep] || !inputs[activeStep]}
-                >
-                  {verified[activeStep] ? 'Certified ✓' : '🛡️ Cross-Verify'}
-                </button>
-              </div>
-
-              {feedback && (
-                <div className={`sandstorm-feedback ${feedback.type === 'success' ? 'feed-success' : 'feed-error'}`}>
-                  {feedback.text}
-                </div>
-              )}
             </div>
           </div>
 
-          {/* Success Panel */}
-          {success ? (
-            <div className="station-success anim-bounce-in">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span className="success-icon">🎉</span>
-                <p className="station-success-msg">
-                  Masterpiece Restored! You resolved all 3 composite gaps across scroll and ledger formats and certified every single term!
-                </p>
-              </div>
-              <div className="station-success-actions">
-                <button className="btn-green" onClick={onComplete}>
-                  Complete Station ✓
-                </button>
-              </div>
+          <div className="station-panel-box">
+            <h4 className="panel-subhead">✍️ Restored Value</h4>
+            <div className="number-input-row">
+              <input
+                type="number"
+                placeholder={`Value at Month ${gap.targetPos}...`}
+                value={inputs[activeGap] || ''}
+                onChange={(e) => setInputs({ ...inputs, [activeGap]: e.target.value })}
+                disabled={verified[activeGap]}
+                className="sandstorm-input"
+              />
             </div>
-          ) : (
-            <div className="station-guide-card">
-              <span className="station-guide-text">
-                💡 Fill and cross-verify all 3 gaps. Notice how the Guild uses both methods to prove authenticity!
-              </span>
+
+            <h4 className="panel-subhead" style={{ marginTop: 10 }}>🔄 Cross-Verify (use other method)</h4>
+            <div className="number-input-row">
+              <input
+                type="number"
+                placeholder="Cross-check value..."
+                value={crossVerifyInputs[activeGap] || ''}
+                onChange={(e) => setCrossVerifyInputs({ ...crossVerifyInputs, [activeGap]: e.target.value })}
+                disabled={verified[activeGap]}
+                className="sandstorm-input"
+              />
+              <button
+                className="btn-primary"
+                onClick={() => handleVerify(activeGap)}
+                disabled={verified[activeGap] || !inputs[activeGap]}
+              >
+                {verified[activeGap] ? 'Certified ✓' : '🛡️ Certify'}
+              </button>
             </div>
-          )}
+
+            {feedback && (
+              <div className={`sandstorm-feedback ${feedback.type === 'success' ? 'feed-success' : 'feed-error'}`}>
+                {feedback.text}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

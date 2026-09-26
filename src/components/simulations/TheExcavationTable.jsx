@@ -1,189 +1,314 @@
 // src/components/simulations/TheExcavationTable.jsx
-// Station A: The Excavation Table (Concept Discovery Lab)
-// Interactive side-by-side comparison of Term-to-Term vs General-Term formula
+// Station A: The Excavation Table — Hands-on Archaeological Dig
+// Students uncover pottery shards from sand, arrange them, discover the pattern,
+// and restore the missing shard by choosing the right method.
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Stations.css';
-import RestorationVisual from '../shared/RestorationVisual.jsx';
 import { useAudio } from '../../hooks/useAudio.js';
 import { EFFICIENCY_THRESHOLD, determineEfficientMethod } from '../../utils/restorationMath.js';
 
+// Real-world scenario: A broken mosaic floor tile sequence in an ancient Roman bathhouse
+const SCENARIOS = [
+  {
+    title: 'Roman Bathhouse Floor Mosaic',
+    context: 'You discovered a row of mosaic tiles numbered in sequence along a bathhouse corridor. Some tiles are buried under rubble.',
+    tiles: [
+      { pos: 1, val: 5, found: true },
+      { pos: 2, val: 8, found: true },
+      { pos: 3, val: 11, found: true },
+      { pos: 4, val: null, found: false },
+      { pos: 5, val: 17, found: true },
+    ],
+    a: 5, d: 3, gapPos: 4, answer: 14,
+    nearLabel: 'Just 1 step from tile 3 (value 11) — add d once!',
+  },
+  {
+    title: 'Pyramid Chamber Engravings',
+    context: 'A pharaoh\'s burial chamber has sequential hieroglyphic counters. Chamber dust obscures one critical number.',
+    tiles: [
+      { pos: 1, val: 7, found: true },
+      { pos: 2, val: 12, found: true },
+      { pos: 3, val: 17, found: true },
+    ],
+    a: 7, d: 5, gapPos: 10, answer: 52,
+    nearLabel: 'Position 10 is 7 steps from the nearest known tile! Use the formula.',
+  },
+];
+
 export default function TheExcavationTable({ onComplete, audioEnabled }) {
   const { narrate, stopAll, sounds } = useAudio(audioEnabled);
+  const [scenarioIdx, setScenarioIdx] = useState(0);
+  const [phase, setPhase] = useState('dig'); // dig | analyze | solve | done
+  const [uncoveredTiles, setUncoveredTiles] = useState([]);
+  const [selectedTool, setSelectedTool] = useState(null);
+  const [userAnswer, setUserAnswer] = useState('');
+  const [feedback, setFeedback] = useState(null);
+  const [dustParticles, setDustParticles] = useState([]);
+  const canvasRef = useRef(null);
 
-  // Sequence state: starts with a = 4, d = 3 (known terms at n = 1, 2, 3)
-  const a = 4;
-  const d = 3;
-  const knownPositions = [1, 2, 3];
+  const scenario = SCENARIOS[scenarioIdx];
+  const knownPositions = scenario.tiles.filter(t => t.found).map(t => t.pos);
+  const efficientTool = determineEfficientMethod(knownPositions, scenario.gapPos);
+  const stepsFromNearest = Math.min(
+    ...knownPositions.map(p => Math.abs(scenario.gapPos - p))
+  );
 
-  const [gapPos, setGapPos] = useState(5); // slider from 4 to 15
-  const [activeTool, setActiveTool] = useState('both'); // 'term-to-term' | 'general-term' | 'both'
-  const [hasExplored, setHasExplored] = useState(false);
-  const [quizAnswered, setQuizAnswered] = useState(false);
-  const [quizSelected, setQuizSelected] = useState(null);
-  const [success, setSuccess] = useState(false);
+  // Generate dust particles for dig animation
+  useEffect(() => {
+    const particles = Array.from({ length: 20 }, (_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      size: Math.random() * 8 + 4,
+      delay: Math.random() * 2,
+    }));
+    setDustParticles(particles);
+  }, [scenarioIdx]);
 
-  // Calculations for current gap
-  const nearestKnownPos = 3;
-  const nearestKnownVal = a + (nearestKnownPos - 1) * d; // 4 + 2*3 = 10
-  const steps = gapPos - nearestKnownPos;
-  const recommendedTool = determineEfficientMethod(knownPositions, gapPos);
-  const isNear = steps <= EFFICIENCY_THRESHOLD;
-
-  function handleSliderChange(newPos) {
+  function handleDigTile(tile) {
+    if (uncoveredTiles.includes(tile.pos)) return;
     sounds.click();
-    setGapPos(newPos);
-    setHasExplored(true);
+    setUncoveredTiles(prev => [...prev, tile.pos]);
+
+    // When all found tiles are uncovered, move to analyze
+    const foundTiles = scenario.tiles.filter(t => t.found).map(t => t.pos);
+    const newUncovered = [...uncoveredTiles, tile.pos];
+    if (foundTiles.every(p => newUncovered.includes(p))) {
+      setTimeout(() => {
+        setPhase('analyze');
+        narrate([
+          { text: `All visible tiles uncovered! The sequence reads: ${scenario.tiles.filter(t => t.found).map(t => `position ${t.pos} = ${t.val}`).join(', ')}. One tile at position ${scenario.gapPos} is still missing!`, style: 'instruction' },
+        ]);
+      }, 600);
+    }
   }
 
-  function handleConfirmationQuestion(answer) {
+  function handleToolSelect(tool) {
+    sounds.click();
+    setSelectedTool(tool);
+  }
+
+  function handleSubmit() {
     stopAll();
-    setQuizSelected(answer);
-    if (answer === 'general-term') {
+    const num = Number(userAnswer.trim());
+
+    if (!selectedTool) {
+      sounds.wrong();
+      setFeedback({ type: 'error', text: 'First, choose your restoration tool!' });
+      return;
+    }
+    if (isNaN(num) || userAnswer.trim() === '') {
+      sounds.wrong();
+      setFeedback({ type: 'error', text: 'Enter a valid number for the missing tile!' });
+      return;
+    }
+
+    const isToolCorrect = selectedTool === efficientTool;
+    const isValCorrect = num === scenario.answer;
+
+    if (isValCorrect && isToolCorrect) {
       sounds.correct();
-      setQuizAnswered(true);
-      setSuccess(true);
-      narrate([
-        { text: "Spot on! Since position 9 is 7 steps away (more than 3), the General Term formula is far more efficient!", style: 'celebration' },
-      ]);
+      setFeedback({
+        type: 'success',
+        text: `Perfect! The missing tile at position ${scenario.gapPos} is ${scenario.answer}, and you chose the optimal method!`,
+      });
+      narrate([{ text: 'Excellent archaeological work! Tile restored with the most efficient tool!', style: 'celebration' }]);
+
+      if (scenarioIdx + 1 < SCENARIOS.length) {
+        setTimeout(() => {
+          setScenarioIdx(s => s + 1);
+          resetRound();
+        }, 1500);
+      } else {
+        setPhase('done');
+      }
+    } else if (isValCorrect && !isToolCorrect) {
+      sounds.wrong();
+      setFeedback({
+        type: 'error',
+        text: `Correct value (${scenario.answer})! But position ${scenario.gapPos} is ${stepsFromNearest} step(s) away — ${efficientTool === 'term-to-term' ? 'Term-to-Term' : 'General Term'} would be faster here.`,
+      });
     } else {
       sounds.wrong();
-      narrate([
-        { text: "Take another look at the distance! Stepping 7 times term-by-term is much slower than substituting once into the formula.", style: 'encouragement' },
-      ]);
+      setFeedback({
+        type: 'error',
+        text: `Not quite! Hint: ${scenario.nearLabel}`,
+      });
     }
+  }
+
+  function resetRound() {
+    setPhase('dig');
+    setUncoveredTiles([]);
+    setSelectedTool(null);
+    setUserAnswer('');
+    setFeedback(null);
+  }
+
+  if (phase === 'done') {
+    return (
+      <div className="station-wrap">
+        <div className="station-success anim-bounce-in" style={{ maxWidth: 520, margin: '40px auto' }}>
+          <span className="success-icon" style={{ fontSize: '3rem' }}>🏺</span>
+          <p className="station-success-msg">
+            All excavation scenarios complete! You identified the pattern, chose the right restoration tool for near and far gaps, and restored every missing tile!
+          </p>
+          <div className="station-success-actions">
+            <button className="btn-green" onClick={onComplete}>Complete Station ✓</button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="station-wrap">
-      {/* Station Header */}
+      {/* Header */}
       <div className="station-header">
         <h3 className="station-title">🏺 Station A: The Excavation Table</h3>
         <div className="station-target-box">
-          <span className="station-target-label">Gap Position:</span>
-          <span className="station-target-num">n = {gapPos} ({steps} steps away)</span>
+          <span className="station-target-label">Dig Site {scenarioIdx + 1}/{SCENARIOS.length}</span>
+          <span className="station-target-num">{scenario.title}</span>
         </div>
       </div>
 
-      <div className="station-grid-2col">
-        {/* Left Column: Interactive Controls & Slider */}
-        <div className="station-col-left">
-          <div className="station-panel-box">
-            <h4 className="panel-subhead">1. Move the Gap on the Artifact</h4>
-            <p className="panel-caption">
-              Known artifact terms: <strong>n=1 (4), n=2 (7), n=3 (10)</strong> · Step d = <strong>+3</strong>
-            </p>
+      {/* Context Story */}
+      <div className="sim-story-banner">
+        <span className="sim-story-icon">📜</span>
+        <p className="sim-story-text">{scenario.context}</p>
+      </div>
 
-            {/* Gap Stepper & Slider */}
-            <div className="slider-control-row">
-              <button
-                className="btn-stepper"
-                onClick={() => handleSliderChange(Math.max(4, gapPos - 1))}
-                disabled={gapPos <= 4}
-                aria-label="Decrease gap position"
-              >
-                −
-              </button>
-              <input
-                type="range"
-                min="4"
-                max="14"
-                value={gapPos}
-                onChange={(e) => handleSliderChange(Number(e.target.value))}
-                className="position-slider"
-                aria-label="Artifact Gap Position"
-              />
-              <button
-                className="btn-stepper"
-                onClick={() => handleSliderChange(Math.min(14, gapPos + 1))}
-                disabled={gapPos >= 14}
-                aria-label="Increase gap position"
-              >
-                +
-              </button>
-            </div>
-
-            {/* Threshold Indicator Pill */}
-            <div className={`threshold-badge ${isNear ? 'threshold-near' : 'threshold-far'}`}>
-              <span className="badge-icon">{isNear ? '⚡' : '📜'}</span>
-              <span>
-                Distance = {steps} step(s) {isNear ? `(≤ ${EFFICIENCY_THRESHOLD} threshold ➔ Term-to-Term is faster!)` : `(> ${EFFICIENCY_THRESHOLD} threshold ➔ General Term is faster!)`}
-              </span>
-            </div>
+      {phase === 'dig' && (
+        <div className="dig-site-grid">
+          <h4 className="panel-subhead">🔨 Tap each sand mound to uncover the tiles beneath!</h4>
+          <div className="tile-dig-row">
+            {scenario.tiles.map(tile => {
+              const isUncovered = uncoveredTiles.includes(tile.pos) || !tile.found;
+              return (
+                <div key={tile.pos} className="dig-tile-wrapper">
+                  <span className="dig-pos-label">n = {tile.pos}</span>
+                  {tile.found ? (
+                    <button
+                      className={`dig-tile ${isUncovered ? 'uncovered' : 'buried'}`}
+                      onClick={() => handleDigTile(tile)}
+                      disabled={isUncovered}
+                    >
+                      {isUncovered ? (
+                        <span className="tile-value">{tile.val}</span>
+                      ) : (
+                        <span className="sand-cover">
+                          🏜️
+                          {dustParticles.slice(0, 3).map(p => (
+                            <span key={p.id} className="dust-particle" style={{
+                              left: `${p.x}%`, top: `${p.y}%`,
+                              width: p.size, height: p.size,
+                              animationDelay: `${p.delay}s`,
+                            }} />
+                          ))}
+                        </span>
+                      )}
+                    </button>
+                  ) : (
+                    <div className="dig-tile gap-tile">
+                      <span className="gap-question">❓</span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
-
-          {/* Discovery Confirmation Challenge */}
-          <div className="station-panel-box confirm-box">
-            <h4 className="panel-subhead">2. Guild Certification Check</h4>
-            <p className="confirm-q-text">
-              If an artifact has known terms at positions 1 and 2, and a gap at <strong>position 9</strong> (7 steps away), which tool is faster?
-            </p>
-
-            <div className="confirm-options-row">
-              <button
-                className={`btn-choice ${quizSelected === 'term-to-term' ? 'choice-wrong' : ''}`}
-                onClick={() => handleConfirmationQuestion('term-to-term')}
-                disabled={success}
-              >
-                🖌️ Term-to-Term (7 steps)
-              </button>
-              <button
-                className={`btn-choice ${quizSelected === 'general-term' ? 'choice-correct' : ''}`}
-                onClick={() => handleConfirmationQuestion('general-term')}
-                disabled={success}
-              >
-                📜 General Term Formula (1 step)
-              </button>
-            </div>
-          </div>
+          <p className="panel-caption" style={{ textAlign: 'center', marginTop: 12 }}>
+            {uncoveredTiles.length}/{scenario.tiles.filter(t => t.found).length} tiles uncovered
+          </p>
         </div>
+      )}
 
-        {/* Right Column: Live Side-by-Side Comparison */}
-        <div className="station-col-right">
-          <div className="live-preview-panel">
-            <div className="live-preview-header">
-              <span className="preview-label">Live Working Comparison (Gap at n = {gapPos}):</span>
+      {phase === 'analyze' && (
+        <div className="station-grid-2col">
+          {/* Left: Pattern Analysis */}
+          <div className="station-col-left">
+            <div className="station-panel-box">
+              <h4 className="panel-subhead">📊 Pattern Analysis</h4>
+              <div className="tile-strip-display">
+                {scenario.tiles.map(tile => (
+                  <div key={tile.pos} className={`strip-tile ${tile.found ? 'known' : 'missing'}`}>
+                    <span className="strip-pos">n={tile.pos}</span>
+                    <span className="strip-val">{tile.found ? tile.val : '?'}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="pattern-analysis-box">
+                <div className="pattern-row">
+                  <span className="pattern-label">First Term (a):</span>
+                  <span className="pattern-value">{scenario.a}</span>
+                </div>
+                <div className="pattern-row">
+                  <span className="pattern-label">Common Difference (d):</span>
+                  <span className="pattern-value">+{scenario.d}</span>
+                </div>
+                <div className="pattern-row">
+                  <span className="pattern-label">Missing Position:</span>
+                  <span className="pattern-value">n = {scenario.gapPos}</span>
+                </div>
+                <div className="pattern-row">
+                  <span className="pattern-label">Steps from Nearest Known:</span>
+                  <span className={`pattern-value ${stepsFromNearest <= EFFICIENCY_THRESHOLD ? 'near-badge' : 'far-badge'}`}>
+                    {stepsFromNearest} step(s) {stepsFromNearest <= EFFICIENCY_THRESHOLD ? '⚡ CLOSE' : '📜 FAR'}
+                  </span>
+                </div>
+              </div>
             </div>
-
-            <RestorationVisual
-              type="tool-comparison"
-              data={{
-                gapPos,
-                nearestKnownPos,
-                nearestKnownVal,
-                commonDiff: d,
-                firstTerm: a,
-                stepsRequired: steps,
-                recommendedTool,
-              }}
-              compact={false}
-            />
           </div>
 
-          {/* Success Panel */}
-          {success ? (
-            <div className="station-success anim-bounce-in">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span className="success-icon">🎉</span>
-                <p className="station-success-msg">
-                  Discovery Certified! You understood the Guild efficiency rule: close gaps (≤3) use term-to-term; far gaps (&gt;3) use the general term!
-                </p>
-              </div>
-              <div className="station-success-actions">
-                <button className="btn-green" onClick={onComplete}>
-                  Complete Station ✓
+          {/* Right: Solve */}
+          <div className="station-col-right">
+            <div className="station-panel-box">
+              <h4 className="panel-subhead">🛠️ Choose Your Restoration Tool</h4>
+              <div className="tool-select-grid">
+                <button
+                  className={`tool-card-btn ${selectedTool === 'term-to-term' ? 'active-tool' : ''}`}
+                  onClick={() => handleToolSelect('term-to-term')}
+                >
+                  <span className="tool-card-icon">🖌️</span>
+                  <span className="tool-card-name">Term-to-Term</span>
+                  <span className="tool-card-desc">Step from nearest tile (best when ≤ {EFFICIENCY_THRESHOLD} steps)</span>
+                </button>
+                <button
+                  className={`tool-card-btn ${selectedTool === 'general-term' ? 'active-tool' : ''}`}
+                  onClick={() => handleToolSelect('general-term')}
+                >
+                  <span className="tool-card-icon">📜</span>
+                  <span className="tool-card-name">General Term Formula</span>
+                  <span className="tool-card-desc">T_n = a + (n−1)d (best when &gt; {EFFICIENCY_THRESHOLD} steps)</span>
                 </button>
               </div>
             </div>
-          ) : (
-            <div className="station-guide-card">
-              <span className="station-guide-text">
-                💡 Drag the slider above 4 through 14 to see how the faster method flips once you pass {EFFICIENCY_THRESHOLD} steps from a known term!
-              </span>
+
+            <div className="station-panel-box">
+              <h4 className="panel-subhead">✍️ Enter the Missing Tile Value</h4>
+              <div className="number-input-row">
+                <input
+                  type="number"
+                  value={userAnswer}
+                  onChange={(e) => setUserAnswer(e.target.value)}
+                  placeholder={`Value at position ${scenario.gapPos}...`}
+                  className="sandstorm-input"
+                  aria-label="Restored tile value"
+                />
+                <button className="btn-primary" onClick={handleSubmit} disabled={!userAnswer}>
+                  🏺 Restore Tile
+                </button>
+              </div>
+              {feedback && (
+                <div className={`sandstorm-feedback ${feedback.type === 'success' ? 'feed-success' : 'feed-error'}`}>
+                  {feedback.text}
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
