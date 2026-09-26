@@ -9,10 +9,10 @@ import { useAudio } from '../../hooks/useAudio.js';
 import { simStationIntro } from '../../utils/narration.js';
 
 const STATIONS = [
-  { id: 0, label: 'A', name: 'Excavation Table', icon: '🏺', desc: 'Dig & discover tile patterns' },
-  { id: 1, label: 'B', name: 'Sandstorm Rescue', icon: '🌪️', desc: 'Race to save monuments' },
-  { id: 2, label: 'C', name: 'Curator\'s Workshop', icon: '🏛️', desc: 'Restore the calendar tablet' },
-  { id: 3, label: 'D', name: 'Fraud Inspector', icon: '🔍', desc: 'Expose forged restorations' },
+  { id: 0, label: 'A', name: 'The Pattern Lab', icon: '🏺', desc: 'Find d & step term-to-term' },
+  { id: 1, label: 'B', name: 'The Formula Builder', icon: '📜', desc: 'Discover Tn = a + (n−1)d' },
+  { id: 2, label: 'C', name: 'The Tool Workshop', icon: '⚡', desc: 'Choose tool & cross-verify' },
+  { id: 3, label: 'D', name: 'The Scroll Restoration', icon: '🔍', desc: 'Multi-gap & error inspector' },
 ];
 
 export default function SimulatePhase({ state, dispatch }) {

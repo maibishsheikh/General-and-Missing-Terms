@@ -57,20 +57,20 @@ export function storyNarration(panel) {
 export function simStationIntro(stationIdx) {
   const intros = [
     [
-      instruct("Welcome to Station A — The Excavation Table!"),
-      instruct("You're at a real archaeological dig site! Uncover buried mosaic tiles, discover the number pattern, and restore the missing tile. Choose whether term-to-term stepping or the general term formula is fastest!"),
+      instruct("Welcome to Station A — The Pattern Lab!"),
+      instruct("Discover how number sequences grow, calculate the common difference d, and master term-to-term stepping with visual jump arrows!"),
     ],
     [
-      instruct("Welcome to Station B — Race Against the Sandstorm!"),
-      instruct("Ancient monuments are being threatened by an approaching sandstorm! Each round features a real archaeological structure — temple columns, obelisk markers, aqueduct gates. Restore the missing measurements before the storm buries them forever!"),
+      instruct("Welcome to Station B — The Formula Builder!"),
+      instruct("When stepping takes too long, we need a formula! Discover how Tn = a + (n minus 1) times d works with our interactive derivation lab and calculator!"),
     ],
     [
-      instruct("Welcome to Station C — Museum Curator's Workshop!"),
-      instruct("You're the lead curator restoring a Babylonian lunar ceremony calendar. The tablet has three types of damage: a faded opening, water stains, and a cracked ledger extension. Restore each entry and cross-verify using both methods!"),
+      instruct("Welcome to Station C — The Tool Workshop!"),
+      instruct("Now you have both tools! Practice the Guild's sacred efficiency rule: use stepping for nearby gaps, and the formula for far gaps, then cross-verify!"),
     ],
     [
-      instruct("Welcome to Station D — Fraud Inspector Bureau!"),
-      instruct("Three suspected forgeries have been submitted to the Guild! Examine each case file, identify the mathematical flaw in the restoration work, and select the correct fix. Real archaeologists face these exact traps!"),
+      instruct("Welcome to Station D — The Scroll Restoration!"),
+      instruct("Apply everything you've learned to restore the Grand Archive's ancient scroll, and inspect student claims to catch mathematical flaws!"),
     ],
   ];
 
