@@ -1,18 +1,18 @@
 // src/components/phases/SimulatePhase.jsx
 import React, { useEffect, useRef } from 'react';
 import './SimulatePhase.css';
-import CoinRegisterStation from '../simulations/CoinRegisterStation.jsx';
-import PriceScannerStation from '../simulations/PriceScannerStation.jsx';
-import ChangeMakerStation from '../simulations/ChangeMakerStation.jsx';
-import ReceiptDetectiveStation from '../simulations/ReceiptDetectiveStation.jsx';
+import TheExcavationTable from '../simulations/TheExcavationTable.jsx';
+import RaceAgainstTheSandstorm from '../simulations/RaceAgainstTheSandstorm.jsx';
+import TheFullRestoration from '../simulations/TheFullRestoration.jsx';
+import TheForgersFakeRestoration from '../simulations/TheForgersFakeRestoration.jsx';
 import { useAudio } from '../../hooks/useAudio.js';
 import { simStationIntro } from '../../utils/narration.js';
 
 const STATIONS = [
-  { id: 0, label: 'A', name: 'Coin Register',     icon: '🪙', desc: 'Build exact target amounts' },
-  { id: 1, label: 'B', name: 'Market Scanner',    icon: '🛒', desc: 'Scan items & calculate totals' },
-  { id: 2, label: 'C', name: 'Change Maker',      icon: '🔄', desc: 'Calculate & dispense change' },
-  { id: 3, label: 'D', name: 'Receipt Detective', icon: '🔍', desc: 'Spot & fix receipt errors' },
+  { id: 0, label: 'A', name: 'Excavation Table', icon: '🏺', desc: 'Live tool comparison lab' },
+  { id: 1, label: 'B', name: 'Sandstorm Sprint', icon: '🌪️', desc: 'Fast tool choice & restoration' },
+  { id: 2, label: 'C', name: 'Full Restoration', icon: '🏛️', desc: 'Composite scroll & cross-verify' },
+  { id: 3, label: 'D', name: 'Forger Detective', icon: '🔍', desc: 'Expose flawed restorations' },
 ];
 
 export default function SimulatePhase({ state, dispatch }) {
@@ -84,10 +84,10 @@ export default function SimulatePhase({ state, dispatch }) {
 
         {/* Station Content Area */}
         <div className="sim-station-area" role="tabpanel" key={s}>
-          {s === 0 && <CoinRegisterStation onComplete={() => handleStationComplete(0)} audioEnabled={state?.audioEnabled} />}
-          {s === 1 && <PriceScannerStation onComplete={() => handleStationComplete(1)} audioEnabled={state?.audioEnabled} />}
-          {s === 2 && <ChangeMakerStation onComplete={() => handleStationComplete(2)} audioEnabled={state?.audioEnabled} />}
-          {s === 3 && <ReceiptDetectiveStation onComplete={() => handleStationComplete(3)} audioEnabled={state?.audioEnabled} />}
+          {s === 0 && <TheExcavationTable onComplete={() => handleStationComplete(0)} audioEnabled={state?.audioEnabled} />}
+          {s === 1 && <RaceAgainstTheSandstorm onComplete={() => handleStationComplete(1)} audioEnabled={state?.audioEnabled} />}
+          {s === 2 && <TheFullRestoration onComplete={() => handleStationComplete(2)} audioEnabled={state?.audioEnabled} />}
+          {s === 3 && <TheForgersFakeRestoration onComplete={() => handleStationComplete(3)} audioEnabled={state?.audioEnabled} />}
         </div>
 
         {/* Footer Navigation */}

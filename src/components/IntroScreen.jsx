@@ -5,11 +5,11 @@ import { generateSessionQuestions } from '../utils/shuffle.js';
 import questionBank from '../data/questionBank.js';
 
 const JOURNEY = [
-  { num: '01', icon: '🔍', label: 'Wonder',   desc: 'Spark your curiosity' },
-  { num: '02', icon: '📖', label: 'Story',    desc: 'Oliver & Emma\'s market' },
-  { num: '03', icon: '🧪', label: 'Simulate', desc: '4 interactive labs' },
-  { num: '04', icon: '🎮', label: 'Practice', desc: '10 worlds & bosses' },
-  { num: '05', icon: '📓', label: 'Reflect',  desc: 'Review & scorecard' },
+  { num: '01', icon: '🔍', label: 'Wonder',   desc: 'The Damaged Scroll Mystery' },
+  { num: '02', icon: '📖', label: 'Story',    desc: 'Kavya & Hafiz at the Guild' },
+  { num: '03', icon: '🧪', label: 'Simulate', desc: '4 Excavation Labs' },
+  { num: '04', icon: '🎮', label: 'Practice', desc: '10 Worlds & Bosses' },
+  { num: '05', icon: '📓', label: 'Reflect',  desc: 'Curator Log & Scorecard' },
 ];
 
 export default function IntroScreen({ state, dispatch }) {
@@ -28,31 +28,33 @@ export default function IntroScreen({ state, dispatch }) {
     <div className="intro-wrap">
       {/* Top Badge */}
       <div className="intro-top-badge">
-        ✨ Curriculum · Money, Coins, Notes &amp; Change Grade 2–5
+        ✨ Grade 7 Math · General &amp; Missing Terms · Archaeological Restoration Guild
       </div>
 
       {/* Main Title */}
       <h1 className="intro-title">
-        <span className="text-orange">Money</span> <span className="text-white">Quest</span>
+        <span className="text-orange" style={{ color: 'var(--gold)' }}>Scroll</span> <span className="text-white">Quest</span>
       </h1>
-      <h2 className="intro-subtitle">MoneyQuest · Master Coins, Notes, Prices &amp; Making Change</h2>
+      <h2 className="intro-subtitle">ScrollQuest · Master General &amp; Missing Terms with Strategic Tool Selection</h2>
 
       {/* Mascot Row */}
       <div className="intro-mascot-row">
-        <div className="intro-mascot-circle">🐷</div>
+        <div className="intro-mascot-circle">🐢</div>
         <div className="intro-speech-bubble">
-          Hi! I'm Penny. Ready to explore the market,<br />count coins, and make exact change? 🪙💵
+          Greetings, apprentice restorer! I am Relic the Tortoise.<br />
+          Ancient scrolls have lost their numbers — which restoration tool will you reach for first? 📜🏺
         </div>
       </div>
 
       {/* Description */}
       <p className="intro-desc">
-        Learn how to recognise coins &amp; notes, add prices, convert between cents &amp; dollars, and calculate change like a pro shopkeeper!
+        Master when to reach for lightning-fast term-to-term checking and when to deploy the general term formula.
+        Restore early, middle, and far gaps, conquer non-consecutive ledgers, and cross-verify every ancient artifact!
       </p>
 
       {/* Journey Card */}
       <div className="journey-card">
-        <div className="journey-card-title">YOUR LEARNING JOURNEY · CLICK ANY PHASE TO START</div>
+        <div className="journey-card-title">YOUR RESTORATION JOURNEY · CLICK ANY PHASE TO ENTER</div>
 
         <div className="journey-steps-container">
           <div className="journey-row top-row">
@@ -99,32 +101,22 @@ export default function IntroScreen({ state, dispatch }) {
         </div>
       </div>
 
-      {/* Actions */}
-      <div className="intro-ctas">
-        <button className="btn btn-primary btn-lg intro-cta-main" onClick={startFresh}>
-          🚀 Begin Your Journey!
-        </button>
-        {hasSaved && (
-          <button className="btn btn-outline" onClick={resumeSession} style={{ marginTop: '10px' }}>
-            ↩ Resume Session
+      {/* Action Buttons */}
+      <div className="intro-actions-row">
+        {hasSaved ? (
+          <>
+            <button className="btn btn-primary btn-lg" onClick={resumeSession}>
+              Resume Restoration 📜
+            </button>
+            <button className="btn btn-outline btn-lg" onClick={startFresh}>
+              Start Fresh 🔄
+            </button>
+          </>
+        ) : (
+          <button className="btn btn-primary btn-lg" onClick={startFresh}>
+            Enter the Grand Archive 🏛️
           </button>
         )}
-      </div>
-
-      {/* Bottom Cards */}
-      <div className="intro-bottom-cards">
-        <div className="bottom-card">
-          <div className="bottom-card-icon" style={{ color: '#ff6b6b' }}>🎯</div>
-          <div>100 Questions</div>
-        </div>
-        <div className="bottom-card">
-          <div className="bottom-card-icon" style={{ color: '#feca57' }}>🪙</div>
-          <div>Coins &amp; Notes</div>
-        </div>
-        <div className="bottom-card">
-          <div className="bottom-card-icon" style={{ color: '#66bb6a' }}>✨</div>
-          <div>Badges &amp; XP</div>
-        </div>
       </div>
     </div>
   );

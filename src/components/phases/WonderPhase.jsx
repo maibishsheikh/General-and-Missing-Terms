@@ -5,7 +5,7 @@ import Mascot from '../shared/Mascot.jsx';
 import { useAudio } from '../../hooks/useAudio.js';
 import { wonderNarration } from '../../utils/narration.js';
 
-const PARTICLES = ['🪙', '💵', '💰', '🏷️', '⭐', '🏆', '🎯', '💡', '🐷', '✨'];
+const PARTICLES = ['📜', '🏺', '🗿', '🗝️', '🐢', '✨', '🔍', '📊', '🏛️', '🛡️'];
 
 export default function WonderPhase({ state, dispatch }) {
   const { narrate, stopAll } = useAudio(state?.audioEnabled ?? true);
@@ -45,29 +45,34 @@ export default function WonderPhase({ state, dispatch }) {
       <div className="wonder-content anim-slide-up">
         {/* Main hook card */}
         <div className="wonder-card glass-card">
-          <div className="wonder-stadium-icon" aria-hidden="true">💰</div>
-          <h1 className="wonder-title headline">The Big Money Mystery!</h1>
+          <div className="wonder-stadium-icon" aria-hidden="true">🏺</div>
+          <h1 className="wonder-title headline">The Worn Number-Scroll Mystery!</h1>
 
           <div className="wonder-number-display">
-            <span className="number-display wonder-num">$2.70 ➔ 85¢ + 50¢ = $1.35 ➔ Change?</span>
+            <span className="number-display wonder-num">
+              [ 7, 12, __, 22 ... Gap at n=25? ] ➔ Which Tool?
+            </span>
           </div>
 
           <div className="wonder-question-card">
             <p className="body-text wonder-q">
-              If Oliver has <strong className="wonder-em">one $2 coin, three 20¢ coins, and one 10¢ coin ($2.70)</strong>…
+              The Restoration Guild just uncovered an ancient number-scroll — but <strong className="wonder-em">crucial numbers have worn away into dust</strong>!
             </p>
             <p className="body-text wonder-q">
-              Can he buy an <strong className="wonder-em">85¢ muffin</strong> and a <strong className="wonder-em">50¢ pencil</strong>, and what is his <span className="wonder-highlight">exact change</span> from paying with $2?
+              You already carry two powerful restoration tools: <span className="wonder-highlight">quick term-to-term checking</span> and <span className="wonder-highlight">the general term formula</span>.
+            </p>
+            <p className="body-text wonder-q">
+              The real question today: <strong className="wonder-em">which one do you reach for first</strong> to restore each piece fastest and most reliably?
             </p>
           </div>
 
           {/* Mascot */}
           <div className="wonder-mascot-row">
-            <Mascot mood="curious" message="Let's investigate how counting coins and making change works!" size="sm" />
+            <Mascot mood="curious" message="Pause and inspect the gap! Rushing to the wrong tool costs precious excavation time." size="sm" />
           </div>
 
           <button className="btn btn-primary btn-lg wonder-cta" onClick={handleInvestigate}>
-            Start Investigation 🔍
+            Enter the Guild Workshop 🔍
           </button>
         </div>
       </div>

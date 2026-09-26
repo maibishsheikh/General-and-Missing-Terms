@@ -2,13 +2,16 @@
 import React, { useMemo } from 'react';
 import './FloatingNumbers.css';
 
-const MONEY_SYMBOLS = ['🪙', '💵', '💰', '🏷️', '🐷', '💲', '🛒', '🛍️', '💱', '✨', '🍎', '🧁', '⭐', '5¢', '10¢', '20¢', '50¢', '$1', '$2', '$5'];
+const GUILD_SYMBOLS = [
+  '📜', '🏺', '🗿', '🗝️', '🐢', 'T_n', 'an+b', '+d', '−d',
+  'n=1', 'n=7', 'n=15', '✨', '🔍', '📊', '🏛️', '🛡️', 'T_4', 'T_25'
+];
 
 export default function FloatingNumbers() {
   const items = useMemo(() => {
     return Array.from({ length: 18 }, (_, i) => ({
       id: i,
-      symbol: MONEY_SYMBOLS[i % MONEY_SYMBOLS.length],
+      symbol: GUILD_SYMBOLS[i % GUILD_SYMBOLS.length],
       left: `${(i * 5.6 + 3) % 94}%`,
       delay: `${(i * 1.3) % 15}s`,
       duration: `${18 + (i % 5) * 4}s`,

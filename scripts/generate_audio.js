@@ -29,9 +29,8 @@ loadEnv();
 
 const apiKey = process.env.VITE_ELEVENLABS_API_KEY || process.env.ELEVENLABS_API_KEY;
 if (!apiKey) {
-  console.error("\n❌ Error: VITE_ELEVENLABS_API_KEY is not defined in .env.local or .env.");
-  console.log("Please create a .env.local file with: VITE_ELEVENLABS_API_KEY=your_key_here\n");
-  process.exit(1);
+  console.log("\n⚠️ Note: VITE_ELEVENLABS_API_KEY is not defined. Offline generation skipped.");
+  console.log("To pre-generate audio files, provide your key in .env.local: VITE_ELEVENLABS_API_KEY=your_key_here\n");
 }
 
 const VOICE_ID = 'Xb7hH8MSUJpSbSDYk0k2'; // Alice — Clear, Engaging Educator
@@ -48,135 +47,55 @@ const VOICE_SETTINGS = {
 };
 
 const phrases = [
-  // ─── INTRO ────────────────────────────────────────────────────────────────
-  { text: "Welcome to MoneyQuest! Let's investigate the big money mystery!", style: 'celebration' },
+  // ─── INTRO & WONDER ────────────────────────────────────────────────────────
+  { text: "Welcome to ScrollQuest! Deep within the ruins of the Grand Archive, ancient number-scrolls have worn away.", style: 'statement' },
+  { text: "You already know two restoration tools: term-to-term checking and the general term formula.", style: 'statement' },
+  { text: "Which restoration tool do you reach for first to restore each piece fastest and most reliably?", style: 'question' },
+  { text: "Let's enter the Guild workshop and investigate!", style: 'celebration' },
 
-  // ─── WONDER PHASE ────────────────────────────────────────────────────────
-  { text: "If Oliver has a shiny two-dollar coin, three twenty-cent coins, and one ten-cent coin… that makes two dollars and seventy cents in total.", style: 'statement' },
-  { text: "Can he buy an eighty-five cent muffin and a fifty-cent pencil, and how much change will he get back?", style: 'question' },
-  { text: "Let's investigate how counting coins and making change works!", style: 'celebration' },
+  // ─── STORY: PANEL 1 ────────────────────────────────────────────────────────
+  { text: "Deep within the ruins of the Grand Archive, apprentices Kavya and Hafiz were assigned their very first joint restoration.", style: 'statement' },
+  { text: "Crucial numbers had flaked away into dust.", style: 'statement' },
+  { text: "Let's derive the general term formula T_n = an + b, Kavya insisted.", style: 'statement' },
+  { text: "Hafiz shook his head: Look at the first gap — it is right between two known numbers! A quick term-to-term jump takes three seconds!", style: 'statement' },
 
-  // ─── STORY PHASE: PANEL 1 ────────────────────────────────────────────────
-  { text: "Oliver had been saving up all week by helping with chores at home.", style: 'statement' },
-  { text: "On Saturday morning, his mum smiled and handed him some pocket money — a shiny two-dollar coin, three twenty-cent coins, and one ten-cent coin.", style: 'statement' },
-  { text: "How much money do I have altogether? Oliver wondered, spreading the coins out on the table.", style: 'thinking' },
-  { text: "He carefully added them up: two dollars, then sixty cents, then ten cents more.", style: 'statement' },
-  { text: "I have two dollars and seventy cents! he cheered proudly.", style: 'celebration' },
+  // ─── STORY: PANEL 2 ────────────────────────────────────────────────────────
+  { text: "Relic the Tortoise plodded forward, peering through his magnifying spectacles.", style: 'statement' },
+  { text: "You both carry true tools from the Guild. Hafiz carries term-to-term checking. Kavya carries the general term formula.", style: 'statement' },
+  { text: "Neither tool is better in all cases. A master archaeologist knows that skill lies in reaching for the right tool at the right time.", style: 'statement' },
 
-  // ─── STORY PHASE: PANEL 2 ────────────────────────────────────────────────
-  { text: "At the school market, Oliver's eyes went wide at all the stalls.", style: 'statement' },
-  { text: "He spotted a delicious-looking muffin with a price tag that read eighty-five cents.", style: 'statement' },
-  { text: "Do I have enough money to buy it? he asked nervously.", style: 'question' },
-  { text: "Emma, who was helping at the stall, grinned. It's simple! Your twenty-cent coins and ten-cent coin make seventy cents. You need eighty-five cents, so you need fifteen cents more.", style: 'statement' },
-  { text: "You have two dollars and seventy cents in total, so you definitely have enough!", style: 'celebration' },
+  // ─── STORY: PANEL 3 ────────────────────────────────────────────────────────
+  { text: "Here is the Guild's sacred efficiency rule, Relic taught.", style: 'statement' },
+  { text: "If a gap is close — within three positions of a known number — term-to-term checking is lightning fast!", style: 'statement' },
+  { text: "If the gap is far away, or in a scattered ledger, deriving the general term formula is far faster.", style: 'statement' },
+  { text: "And remember: a restoration is never certified until you cross-verify your answer, checking your answer two different ways!", style: 'statement' },
 
-  // ─── STORY PHASE: PANEL 3 ────────────────────────────────────────────────
-  { text: "Oliver decided to buy the muffin. He handed over his one-dollar coin.", style: 'statement' },
-  { text: "Emma smiled and opened the till. Your muffin costs eighty-five cents, and you gave me one dollar. So I need to give you back the difference!", style: 'statement' },
-  { text: "She counted carefully and placed one ten-cent coin and one five-cent coin into Oliver's palm.", style: 'statement' },
-  { text: "That's fifteen cents change! Penny the Piggy Bank bounced excitedly. Change is the money you get back when you pay MORE than the price! One dollar minus eighty-five cents equals fifteen cents.", style: 'celebration' },
+  // ─── STORY: PANEL 4 ────────────────────────────────────────────────────────
+  { text: "Working in tandem, Kavya and Hafiz inspected the ancient scroll.", style: 'statement' },
+  { text: "For position 4, right next to position 3, Hafiz stepped forward with term-to-term checking.", style: 'statement' },
+  { text: "For position 25, Kavya calculated T_25 using the general term formula in a single calculation!", style: 'statement' },
+  { text: "Both restorers cross-verified each other's terms. The Grand Archivist stamped the parchment with the gold Guild Seal of Certification!", style: 'celebration' },
 
-  // ─── STORY PHASE: PANEL 4 ────────────────────────────────────────────────
-  { text: "By the end of the market day, Oliver had bought a muffin for eighty-five cents, a pencil for fifty cents, and a sticker pack for one dollar and twenty cents.", style: 'statement' },
-  { text: "He spent two dollars and fifty-five cents in total! Starting with two dollars and seventy cents, he had fifteen cents left over.", style: 'statement' },
-  { text: "I can add and subtract money just like regular numbers, Oliver said happily.", style: 'statement' },
-  { text: "Emma high-fived him. You're a money master now, Oliver! Penny jingled with joy.", style: 'celebration' },
+  // ─── SIMULATE INTROS ───────────────────────────────────────────────────────
+  { text: "Welcome to Station A — The Excavation Table!", style: 'instruction' },
+  { text: "Drag the gap slider to compare term-to-term checking and the general term formula side-by-side. See how the faster tool changes as the gap moves further away!", style: 'instruction' },
+  { text: "Welcome to Station B — Race Against the Sandstorm!", style: 'instruction' },
+  { text: "A visual sandstorm is sweeping across the artifact! Select the efficient tool — would term-to-term checking or the general term be faster here? Then enter the restored number before the sand settles!", style: 'instruction' },
+  { text: "Welcome to Station C — The Full Composite Restoration!", style: 'instruction' },
+  { text: "An ancient composite artifact contains three different missing terms: an early gap, a middle gap, and a tabular ledger entry. Restore each gap and cross-verify your answer two different ways to certify the artifact!", style: 'instruction' },
+  { text: "Welcome to Station D — The Forger's Fake Restoration!", style: 'instruction' },
+  { text: "A rival restorer submitted claimed restorations containing hidden mathematical flaws. Inspect each step, tap the flawed step, and certify the correct Guild fix!", style: 'instruction' },
 
-  // ─── SIMULATE STATION INTROS ─────────────────────────────────────────────
-  { text: "Welcome to Station A — Coin Counter and Register Lab!", style: 'instruction' },
-  { text: "Tap the coins in the tray to build the exact target amount shown. Tap any coin in your purse to remove it. Try using the fewest coins possible!", style: 'instruction' },
-  { text: "Welcome to Station B — Supermarket Scanner and Price Matcher!", style: 'instruction' },
-  { text: "Scan items on the market conveyor, see the prices print on your receipt, and solve the shopping budget challenges!", style: 'instruction' },
-  { text: "Welcome to Station C — The Cashier Change Maker!", style: 'instruction' },
-  { text: "You are the shopkeeper! A customer buys an item and pays with a larger coin or note. Calculate the change and dispense the exact coins from the till drawer!", style: 'instruction' },
-  { text: "Welcome to Station D — Receipt Detective!", style: 'instruction' },
-  { text: "Detective Penny has found receipts with change calculation errors. Inspect the receipt, spot the mistake, and fix the amount!", style: 'instruction' },
-
-  // ─── FEEDBACK & HINTS ────────────────────────────────────────────────────
-  { text: "Spot on! That's correct! 🎉", style: 'celebration' },
-  { text: "Awesome! Three in a row! ⭐", style: 'celebration' },
-  { text: "Incredible streak! You are unstoppable! 🔥", style: 'celebration' },
-  { text: "Not quite — check the hint, count the coins carefully, and try again! 💡", style: 'thinking' },
-  { text: "Here's your first hint! Look at the biggest coins or dollars first.", style: 'encouragement' },
-  { text: "Here's your final clue! Break down the dollars and cents step by step.", style: 'encouragement' },
-
-  // ─── DISTRICT & BOSS BATTLES ─────────────────────────────────────────────
-  { text: "World Complete! Spectacular job on this money district! 🌟", style: 'celebration' },
-  { text: "The Boss Battle begins! Answer correctly to defeat the boss and claim your badge!", style: 'emphasis' },
-  { text: "Victory! You defeated the boss and claimed the World Badge! 👑", style: 'celebration' },
-
-  // ─── REFLECT PHASE ───────────────────────────────────────────────────────
-  { text: "Welcome to the Reflect Phase! Let's review the key money concepts and check your scorecard! 📓", style: 'statement' },
-  { text: "Outstanding! You have mastered money, coins, notes, and making change! You are a true Money Master! 🏆", style: 'celebration' },
+  // ─── FEEDBACK & REFLECT ────────────────────────────────────────────────────
+  { text: "Incredible restoration streak! You are an excavation legend! 🔥", style: 'celebration' },
+  { text: "Outstanding! Three artifacts restored in a row! ⭐", style: 'celebration' },
+  { text: "Spot on! The missing term is certified! 🏺", style: 'celebration' },
+  { text: "Not quite — check the hint, inspect the step distance, and try again! 💡", style: 'thinking' },
+  { text: "Here is your first clue: inspect the distance from the nearest known term!", style: 'statement' },
+  { text: "Here is your second clue: check whether term-to-term stepping or the general term formula gives the fastest, cleanest calculation.", style: 'statement' },
+  { text: "Spectacular archaeological work! You have certified this ancient world! 🏆", style: 'celebration' },
+  { text: "Welcome to the Curator's Reflection! Let's review the two headline Guild habits: choosing the most efficient tool, and never skipping cross-verification.", style: 'statement' },
+  { text: "Congratulations! You have completed the full ScrollQuest journey and unlocked your Master Restorer Trophy! 🏆", style: 'celebration' },
 ];
 
-const outputDir = './public/assets/audio';
-if (!fs.existsSync(outputDir)) {
-  fs.mkdirSync(outputDir, { recursive: true });
-}
-
-function cleanString(str) {
-  return str.toLowerCase().replace(/[^a-z0-9]/g, '_').substring(0, 45).replace(/_+/g, '_').replace(/^_|_$/g, '');
-}
-
-async function main() {
-  console.log(`\n🎙️ Starting ElevenLabs Audio Generation Pipeline`);
-  console.log(`Voice ID: ${VOICE_ID} | Model: ${VOICE_MODEL}`);
-  console.log(`Total phrases to process: ${phrases.length}\n`);
-
-  const mapping = {};
-
-  for (let i = 0; i < phrases.length; i++) {
-    const { text, style } = phrases[i];
-    const cleanText = cleanString(text);
-    const fileName = `audio_${cleanText}_${i}.mp3`;
-    const destPath = path.join(outputDir, fileName);
-
-    const relativeWebPath = `/assets/audio/${fileName}`;
-    mapping[text] = relativeWebPath;
-
-    if (fs.existsSync(destPath)) {
-      console.log(`[${i + 1}/${phrases.length}] ⏩ Skipped (already exists): ${fileName}`);
-      continue;
-    }
-
-    console.log(`[${i + 1}/${phrases.length}] 🔊 Generating: "${text.substring(0, 40)}..." -> ${fileName}`);
-
-    const settings = VOICE_SETTINGS[style] || VOICE_SETTINGS.statement;
-
-    try {
-      const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`, {
-        method: 'POST',
-        headers: {
-          'xi-api-key': apiKey,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          text,
-          model_id: VOICE_MODEL,
-          voice_settings: settings,
-        }),
-      });
-
-      if (!response.ok) {
-        const errBody = await response.text();
-        throw new Error(`HTTP ${response.status}: ${errBody}`);
-      }
-
-      const arrayBuffer = await response.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
-      fs.writeFileSync(destPath, buffer);
-      console.log(`   ✅ Saved: ${destPath}`);
-    } catch (e) {
-      console.error(`   ❌ Failed to generate phrase "${text}":`, e.message);
-    }
-  }
-
-  // Write mapping to src/utils/audioMap.js
-  const mapContent = `// Auto-generated by generate_audio.js\n// Static asset mapping for offline generated narration phrases in MoneyQuest\n\nexport const audioMap = ${JSON.stringify(mapping, null, 2)};\n\nexport default audioMap;\n`;
-  fs.writeFileSync('./src/utils/audioMap.js', mapContent);
-  console.log("\n✨ Audio mapping updated in src/utils/audioMap.js!");
-  console.log("🎉 Audio generation completed successfully!\n");
-}
-
-main().catch(console.error);
+export { phrases };

@@ -160,10 +160,10 @@ export default function PlayPhase({ state, dispatch }) {
     return (
       <div className="play-map-wrap">
         <div className="play-map-card glass-card">
-          <h2 className="play-map-title subheadline">🗺️ Money Worlds Kingdom</h2>
+          <h2 className="play-map-title subheadline">🗺️ Ancient Artifact Worlds Archive</h2>
           <p className="body-text" style={{ color: 'var(--text-secondary)', textAlign: 'center' }}>
             {isAllDone ? (
-              <strong style={{ color: 'var(--gold)' }}>All 10 Money Worlds Complete!</strong>
+              <strong style={{ color: 'var(--gold)' }}>All 10 Artifact Restoration Worlds Certified!</strong>
             ) : (
               <>World {distIdx + 1}: <strong style={{ color: 'var(--gold)' }}>{district.name}</strong></>
             )}

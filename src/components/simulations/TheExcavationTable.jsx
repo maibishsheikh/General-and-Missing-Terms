@@ -166,7 +166,7 @@ export default function TheExcavationTable({ onComplete, audioEnabled }) {
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span className="success-icon">🎉</span>
                 <p className="station-success-msg">
-                  Discovery Certified! You understood the Guild efficiency rule: close gaps (≤3) use term-to-term; far gaps (>3) use the general term!
+                  Discovery Certified! You understood the Guild efficiency rule: close gaps (≤3) use term-to-term; far gaps (&gt;3) use the general term!
                 </p>
               </div>
               <div className="station-success-actions">

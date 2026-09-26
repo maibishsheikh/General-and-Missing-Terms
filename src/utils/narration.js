@@ -1,6 +1,11 @@
 // src/utils/narration.js
-// Narration script builder for MoneyQuest
-// Strictly matches on-screen text 1:1
+// Narration script builder for ScrollQuest (Grade 7 Math)
+// Adheres strictly to PRD §11 rules:
+// - "general term" and "term-to-term" always named as a pair when offered as a choice
+// - "cross-verify" paired with "checking your answer two different ways" on first use
+// - Table entries read with both position and value stated
+// - Gaps announced as "the missing term at position n"
+// - 1:1 strict parity with on-screen text
 
 export const say       = (text) => ({ text, style: 'statement' });
 export const ask       = (text) => ({ text, style: 'question' });
@@ -12,40 +17,37 @@ export const encourage = (text) => ({ text, style: 'encouragement' });
 
 export function wonderNarration() {
   return [
-    say("Welcome to MoneyQuest! Let's investigate the big money mystery!"),
-    say("If Oliver has a shiny two-dollar coin, three twenty-cent coins, and one ten-cent coin… that makes two dollars and seventy cents in total."),
-    ask("Can he buy an eighty-five cent muffin and a fifty-cent pencil, and how much change will he get back?"),
-    cheer("Let's investigate how counting coins and making change works!"),
+    say("Welcome to ScrollQuest! Deep within the ruins of the Grand Archive, ancient number-scrolls have worn away."),
+    say("You already know two restoration tools: term-to-term checking and the general term formula."),
+    ask("Which restoration tool do you reach for first to restore each piece fastest and most reliably?"),
+    cheer("Let's enter the Guild workshop and investigate!"),
   ];
 }
 
 export function storyNarration(panel) {
   const scripts = [
     [
-      say("Oliver had been saving up all week by helping with chores at home."),
-      say("On Saturday morning, his mum smiled and handed him some pocket money — a shiny two-dollar coin, three twenty-cent coins, and one ten-cent coin."),
-      think("How much money do I have altogether? Oliver wondered, spreading the coins out on the table."),
-      say("He carefully added them up: two dollars, then sixty cents, then ten cents more."),
-      cheer("I have two dollars and seventy cents! he cheered proudly."),
+      say("Deep within the ruins of the Grand Archive, apprentices Kavya and Hafiz were assigned their very first joint restoration."),
+      say("Crucial numbers had flaked away into dust."),
+      say("Let's derive the general term formula T_n = an + b, Kavya insisted."),
+      say("Hafiz shook his head: Look at the first gap — it is right between two known numbers! A quick term-to-term jump takes three seconds!"),
     ],
     [
-      say("At the school market, Oliver's eyes went wide at all the stalls."),
-      say("He spotted a delicious-looking muffin with a price tag that read eighty-five cents."),
-      ask("Do I have enough money to buy it? he asked nervously."),
-      say("Emma, who was helping at the stall, grinned. It's simple! Your twenty-cent coins and ten-cent coin make seventy cents. You need eighty-five cents, so you need fifteen cents more."),
-      cheer("You have two dollars and seventy cents in total, so you definitely have enough!"),
+      say("Relic the Tortoise plodded forward, peering through his magnifying spectacles."),
+      say("You both carry true tools from the Guild. Hafiz carries term-to-term checking. Kavya carries the general term formula."),
+      say("Neither tool is better in all cases. A master archaeologist knows that skill lies in reaching for the right tool at the right time."),
     ],
     [
-      say("Oliver decided to buy the muffin. He handed over his one-dollar coin."),
-      say("Emma smiled and opened the till. Your muffin costs eighty-five cents, and you gave me one dollar. So I need to give you back the difference!"),
-      say("She counted carefully and placed one ten-cent coin and one five-cent coin into Oliver's palm."),
-      cheer("That's fifteen cents change! Penny the Piggy Bank bounced excitedly. Change is the money you get back when you pay MORE than the price! One dollar minus eighty-five cents equals fifteen cents."),
+      say("Here is the Guild's sacred efficiency rule, Relic taught."),
+      say("If a gap is close — within three positions of a known number — term-to-term checking is lightning fast!"),
+      say("If the gap is far away, or in a scattered ledger, deriving the general term formula is far faster."),
+      say("And remember: a restoration is never certified until you cross-verify your answer, checking your answer two different ways!"),
     ],
     [
-      say("By the end of the market day, Oliver had bought a muffin for eighty-five cents, a pencil for fifty cents, and a sticker pack for one dollar and twenty cents."),
-      say("He spent two dollars and fifty-five cents in total! Starting with two dollars and seventy cents, he had fifteen cents left over."),
-      say("I can add and subtract money just like regular numbers, Oliver said happily."),
-      cheer("Emma high-fived him. You're a money master now, Oliver! Penny jingled with joy."),
+      say("Working in tandem, Kavya and Hafiz inspected the ancient scroll."),
+      say("For position 4, right next to position 3, Hafiz stepped forward with term-to-term checking."),
+      say("For position 25, Kavya calculated T_25 using the general term formula in a single calculation!"),
+      cheer("Both restorers cross-verified each other's terms. The Grand Archivist stamped the parchment with the gold Guild Seal of Certification!"),
     ],
   ];
 
@@ -55,20 +57,20 @@ export function storyNarration(panel) {
 export function simStationIntro(stationIdx) {
   const intros = [
     [
-      instruct("Welcome to Station A — Coin Counter and Register Lab!"),
-      instruct("Tap the coins in the tray to build the exact target amount shown. Tap any coin in your purse to remove it. Try using the fewest coins possible!"),
+      instruct("Welcome to Station A — The Excavation Table!"),
+      instruct("Drag the gap slider to compare term-to-term checking and the general term formula side-by-side. See how the faster tool changes as the gap moves further away!"),
     ],
     [
-      instruct("Welcome to Station B — Supermarket Scanner and Price Matcher!"),
-      instruct("Scan items on the market conveyor, see the prices print on your receipt, and solve the shopping budget challenges!"),
+      instruct("Welcome to Station B — Race Against the Sandstorm!"),
+      instruct("A visual sandstorm is sweeping across the artifact! Select the efficient tool — would term-to-term checking or the general term be faster here? Then enter the restored number before the sand settles!"),
     ],
     [
-      instruct("Welcome to Station C — The Cashier Change Maker!"),
-      instruct("You are the shopkeeper! A customer buys an item and pays with a larger coin or note. Calculate the change and dispense the exact coins from the till drawer!"),
+      instruct("Welcome to Station C — The Full Composite Restoration!"),
+      instruct("An ancient composite artifact contains three different missing terms: an early gap, a middle gap, and a tabular ledger entry. Restore each gap and cross-verify your answer two different ways to certify the artifact!"),
     ],
     [
-      instruct("Welcome to Station D — Receipt Detective!"),
-      instruct("Detective Penny has found receipts with change calculation errors. Inspect the receipt, spot the mistake, and fix the amount!"),
+      instruct("Welcome to Station D — The Forger's Fake Restoration!"),
+      instruct("A rival restorer submitted claimed restorations containing hidden mathematical flaws. Inspect each step, tap the flawed step, and certify the correct Guild fix!"),
     ],
   ];
 
@@ -83,58 +85,58 @@ export function playQuestionNarration(questionText) {
 
 export function playCorrectNarration(streak = 1) {
   if (streak >= 5) {
-    return [cheer("Incredible streak! You are unstoppable! 🔥")];
+    return [cheer("Incredible restoration streak! You are an excavation legend! 🔥")];
   }
   if (streak >= 3) {
-    return [cheer("Awesome! Three in a row! ⭐")];
+    return [cheer("Outstanding! Three artifacts restored in a row! ⭐")];
   }
-  return [cheer("Spot on! That's correct! 🎉")];
+  return [cheer("Spot on! The missing term is certified! 🏺")];
 }
 
 export function playWrongNarration() {
   return [
-    think("Not quite — check the hint, count the coins carefully, and try again! 💡")
+    think("Not quite — check the hint, inspect the step distance, and try again! 💡")
   ];
 }
 
 export function playHint1Narration() {
   return [
-    encourage("Here's your first hint! Look at the biggest coins or dollars first.")
+    say("Here is your first clue: inspect the distance from the nearest known term!")
   ];
 }
 
 export function playHint2Narration() {
   return [
-    encourage("Here's your final clue! Break down the dollars and cents step by step.")
+    say("Here is your second clue: check whether term-to-term stepping or the general term formula gives the fastest, cleanest calculation.")
   ];
 }
 
 export function districtCompleteNarration() {
   return [
-    cheer("World Complete! Spectacular job on this money district! 🌟")
+    cheer("Spectacular archaeological work! You have certified this ancient world! 🏆")
   ];
 }
 
 export function bossStartNarration() {
   return [
-    emphasize("The Boss Battle begins! Answer correctly to defeat the boss and claim your badge!")
+    cheer("The World Boss Battle begins! Answer correctly to restore the ancient relic and claim your badge! 👑")
   ];
 }
 
 export function bossWinNarration() {
   return [
-    cheer("Victory! You defeated the boss and claimed the World Badge! 👑")
+    cheer("Victory! You defeated the World Boss and certified the ancient archive! 🏆")
   ];
 }
 
 export function reflectNarration() {
   return [
-    say("Welcome to the Reflect Phase! Let's review the key money concepts and check your scorecard! 📓")
+    say("Welcome to the Curator's Reflection! Let's review the two headline Guild habits: choosing the most efficient tool, and never skipping cross-verification.")
   ];
 }
 
 export function reflectCompleteNarration() {
   return [
-    cheer("Outstanding! You have mastered money, coins, notes, and making change! You are a true Money Master! 🏆")
+    cheer("Congratulations! You have completed the full ScrollQuest journey and unlocked your Master Restorer Trophy! 🏆")
   ];
 }

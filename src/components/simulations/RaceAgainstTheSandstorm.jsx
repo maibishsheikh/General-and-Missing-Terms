@@ -216,7 +216,7 @@ export default function RaceAgainstTheSandstorm({ onComplete, audioEnabled }) {
               >
                 <span className="tool-card-icon">📜</span>
                 <span className="tool-card-name">General Term</span>
-                <span className="tool-card-desc">Formula substitution T_n = a + (n−1)d (> 3 steps)</span>
+                <span className="tool-card-desc">Formula substitution T_n = a + (n−1)d (&gt; 3 steps)</span>
               </button>
             </div>
           </div>

@@ -11,29 +11,29 @@ import questionBank from '../../data/questionBank.js';
 
 const REFLECT_QUESTIONS = [
   {
-    q: "1. How many cents are in a one-dollar ($1.00) coin?",
+    q: "1. Why is using the general term formula preferred over term-to-term checking when finding a far term at position n = 45?",
     options: [
-      "100 cents",
-      "50 cents",
-      "10 cents",
+      "Because stepping 44 times term-by-term is slow and error-prone; the formula calculates it in one step.",
+      "Because term-to-term checking is mathematically invalid for positions greater than 10.",
+      "Because the formula only works when the common difference is a positive number.",
     ],
     correct: 0,
   },
   {
-    q: "2. Oliver pays with a $1.00 coin for an 85¢ muffin. How is his change calculated?",
+    q: "2. A restorer fills a gap using term-to-term checking and gets 24. Why does Guild code require cross-verification?",
     options: [
-      "Amount Paid − Price = $1.00 − 85¢ = 15¢",
-      "Add both numbers: $1.00 + 85¢ = $1.85",
-      "Change is always a fixed 50¢",
+      "To confirm the restored number independently matches general-term substitution before certification.",
+      "Because the Guild always requires guessing a second random number.",
+      "Cross-verification is only necessary if your first calculation was done without paper.",
     ],
     correct: 0,
   },
   {
-    q: "3. What is the golden rule when adding prices in dollars and cents?",
+    q: "3. When reasoning backward to find a missing early term at position n = 1, what common trap must you avoid?",
     options: [
-      "Keep dollars with dollars and cents with cents",
-      "Ignore the decimal points completely",
-      "Always subtract the smaller number",
+      "Adding the common difference instead of reversing the forward step (subtracting d).",
+      "Assuming the first term must always be zero.",
+      "Dividing the known term by the position number.",
     ],
     correct: 0,
   },
@@ -86,9 +86,9 @@ export default function ReflectPhase({ state, dispatch }) {
       <div className="reflect-wrap">
         <div className="trophy-card glass-card anim-bounce-in">
           <div className="trophy-icon">🏆</div>
-          <h1 className="trophy-title headline">You're a Money Grand Master!</h1>
+          <h1 className="trophy-title headline">Master Archaeologist Certified!</h1>
           <p className="trophy-sub subheadline" style={{ color: 'var(--gold)' }}>
-            Money, Coins &amp; Change Mastery Complete ✅
+            General &amp; Missing Terms Mastery Complete ✅
           </p>
 
           {/* Stats Breakdown */}
@@ -119,29 +119,33 @@ export default function ReflectPhase({ state, dispatch }) {
           {/* Badges */}
           {earnedBadges.length > 0 && (
             <div className="trophy-badges">
-              <p className="label-text" style={{ color: 'var(--text-muted)', textAlign: 'center', marginBottom: '6px' }}>
-                Badges Unlocked
-              </p>
-              <div className="badge-list">
+              <h3 className="subheadline" style={{ fontSize: '1rem', color: 'var(--gold)', marginBottom: '8px' }}>
+                Guild Badges Unlocked:
+              </h3>
+              <div className="badges-grid-compact">
                 {earnedBadges.map(b => (
-                  <div key={b.id} className="badge-pill">
-                    <span style={{ fontSize: '1.3rem' }}>{b.icon}</span>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                      <span style={{ fontWeight: 800 }}>{b.label}</span>
-                      <span className="badge-desc label-text">{b.description}</span>
-                    </div>
+                  <div key={b.id} className="badge-pill-compact" title={b.description}>
+                    <span>{b.icon}</span>
+                    <span>{b.label}</span>
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          <div className="trophy-actions">
-            <button className="btn btn-primary trophy-cta" onClick={playAgain}>
-              🔄 Play Again
+          {journal && (
+            <div className="journal-review-card">
+              <span className="journal-review-label">📜 Your Restorer's Field Log:</span>
+              <p className="journal-review-text">"{journal}"</p>
+            </div>
+          )}
+
+          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginTop: '16px' }}>
+            <button className="btn btn-primary" onClick={playAgain}>
+              Restore Another Archive 🔄
             </button>
-            <button className="btn btn-outline" onClick={() => dispatch({ type: 'SET_PHASE', payload: 'intro' })}>
-              🏠 Home
+            <button className="btn btn-outline" onClick={() => dispatch({ type: 'SET_PHASE', payload: 'play' })}>
+              Revisit Worlds 🗺️
             </button>
           </div>
         </div>
@@ -149,34 +153,39 @@ export default function ReflectPhase({ state, dispatch }) {
     );
   }
 
+  const allAnswered = Object.keys(answers).length === REFLECT_QUESTIONS.length;
+
   return (
     <div className="reflect-wrap">
-      <div className="reflect-card glass-card anim-slide-up">
-        <div className="reflect-header">
-          <span className="reflect-badge">📓 Learning Reflection &amp; Scorecard</span>
-          <h2 className="reflect-title subheadline">Reflect on Your Money Journey</h2>
+      <div className="reflect-container anim-slide-up">
+        {/* Header */}
+        <div className="reflect-header glass-card">
+          <span className="reflect-badge-tag">📓 Phase 5 · Curator's Reflection</span>
+          <h1 className="reflect-title headline">The Restoration Guild Review</h1>
+          <p className="body-text" style={{ color: 'var(--sand)' }}>
+            True mastery is not just calculating numbers — it is knowing <em>which tool to reach for</em> and proving your restoration through cross-verification.
+          </p>
         </div>
 
-        <Mascot mood="curious" message="Let's check your key takeaways and review your scorecard!" size="sm" />
+        {/* 3 Recap Questions targeting misconceptions */}
+        <div className="reflect-questions-card glass-card">
+          <h2 className="subheadline" style={{ color: 'var(--gold)', marginBottom: '14px' }}>
+            🧠 Guild Restorer's Code Check:
+          </h2>
 
-        {/* Self-assessment Concept Check */}
-        <div className="reflect-quiz-container">
-          <p className="body-text" style={{ color: 'var(--gold)', fontWeight: 800 }}>
-            🧠 Money Concept Reflection Check:
-          </p>
-          {REFLECT_QUESTIONS.map((qObj, qIdx) => (
-            <div key={qIdx} className="reflect-q-item">
-              <p className="reflect-q-text">{qObj.q}</p>
-              <div className="reflect-opt-row">
-                {qObj.options.map((opt, oIdx) => {
-                  const isSelected = answers[qIdx] === oIdx;
+          {REFLECT_QUESTIONS.map((item, qIdx) => (
+            <div key={qIdx} className="reflect-q-block">
+              <p className="reflect-q-text">{item.q}</p>
+              <div className="reflect-options-list">
+                {item.options.map((opt, optIdx) => {
+                  const isSelected = answers[qIdx] === optIdx;
                   return (
                     <button
-                      key={oIdx}
-                      className={`option-btn ${isSelected ? 'selected' : ''}`}
-                      onClick={() => handleSelectOption(qIdx, oIdx)}
-                      style={{ textAlign: 'left', minHeight: '44px', fontSize: '1rem', padding: '10px 14px' }}
+                      key={optIdx}
+                      className={`reflect-opt-btn ${isSelected ? 'selected' : ''}`}
+                      onClick={() => handleSelectOption(qIdx, optIdx)}
                     >
+                      <span className="opt-indicator">{isSelected ? '●' : '○'}</span>
                       <span>{opt}</span>
                     </button>
                   );
@@ -186,50 +195,41 @@ export default function ReflectPhase({ state, dispatch }) {
           ))}
         </div>
 
-        {/* Journal Entry */}
-        <div className="reflect-journal">
-          <label className="reflect-label body-text" htmlFor="journal-input">
-            Write one key money rule or fact you mastered:
-          </label>
+        {/* Reflection Journal Prompt */}
+        <div className="reflect-journal-card glass-card">
+          <h3 className="subheadline" style={{ color: 'var(--gold)', marginBottom: '6px' }}>
+            📜 Restorer's Field Log (PRD §8.5):
+          </h3>
+          <p className="body-text" style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem', marginBottom: '10px' }}>
+            Which restoration made you switch tools partway through, and why?
+          </p>
           <textarea
-            id="journal-input"
-            className="reflect-textarea"
-            placeholder="e.g. 100 cents = $1.00, and Change = Amount Paid − Price!"
+            className="journal-textarea"
+            rows={3}
+            placeholder="Write your observation here (e.g., 'When I realized position 28 was 25 steps away, I switched from term-to-term to the general formula...')"
             value={journal}
-            onChange={e => setJournal(e.target.value)}
-            rows={2}
-            aria-label="Learning journal entry"
+            onChange={(e) => setJournal(e.target.value)}
           />
-
-          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '6px' }}>
-            <span style={{ fontSize: '0.8rem', color: '#a0a0b8', alignSelf: 'center' }}>Quick insert:</span>
-            {[
-              '100 cents = $1.00',
-              'Change = Amount Paid − Price',
-              'Keep cents with cents and dollars with dollars',
-            ].map(ex => (
-              <button
-                key={ex}
-                type="button"
-                onClick={() => setJournal(ex)}
-                className="quick-insert-btn"
-              >
-                ✨ {ex}
-              </button>
-            ))}
-          </div>
         </div>
 
-        {/* Performance Snapshot */}
-        <div className="reflect-stats">
-          <div className="reflect-stat-pill">⭐ {state?.xp || 0} XP Earned</div>
-          <div className="reflect-stat-pill">✅ {totalCorrect}/100 Correct</div>
-          <div className="reflect-stat-pill">🔥 Best Streak: {state?.maxStreak || 0}</div>
+        {/* Mascot Advice */}
+        <div className="reflect-mascot-row">
+          <Mascot
+            mood="mentor"
+            message="Take your time to reflect! The best restorers always know why their method works before applying it."
+            size="sm"
+          />
         </div>
 
-        <div className="reflect-actions">
-          <button className="btn btn-primary btn-lg" onClick={handleSubmit}>
-            🌟 Submit Reflection &amp; View Trophy Scorecard!
+        {/* Submit Button */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '12px' }}>
+          <button
+            className="btn btn-primary btn-lg"
+            onClick={handleSubmit}
+            disabled={!allAnswered}
+            style={{ opacity: allAnswered ? 1 : 0.5 }}
+          >
+            Submit Field Log &amp; Receive Certificate 📜✓
           </button>
         </div>
       </div>
