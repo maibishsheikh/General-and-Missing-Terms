@@ -1,268 +1,338 @@
 // src/components/simulations/TheForgersFakeRestoration.jsx
-// Station D: The Forger's Fake Restoration — Fraud Inspector Bureau
-// Students work as fraud inspectors examining submitted restoration claims.
-// Inspired by real art forgery detection in museums.
+// Station D: "The Scroll Restoration" — Full simulation applying ALL skills
+// Progressive: Real-world scenario → Multi-gap artifact → Error detection
+// Grand finale combining everything learned in Stations A, B, C
 
 import React, { useState } from 'react';
 import './Stations.css';
 import { useAudio } from '../../hooks/useAudio.js';
-
-const FORGERY_CASES = [
-  {
-    id: 1,
-    title: 'The Reversed Archaeologist',
-    caseFile: 'Suspect: Dr. Petra Voss',
-    scenario: 'Dr. Voss submitted a restoration for a marble staircase with step-heights: [__, 15, 21, 27]. She claims the missing 1st step height is 21.',
-    evidence: {
-      pattern: '[__, 15, 21, 27]',
-      claimed: 'Step 1 height = 21',
-      d: '+6 (each step increases by 6 cm)',
-    },
-    steps: [
-      { id: 1, label: 'Step 1', text: 'Identified common difference: 21 − 15 = +6. ✓', isError: false, icon: '✅' },
-      { id: 2, label: 'Step 2', text: 'To find Step 1, ADDED +6 to Step 2: 15 + 6 = 21.', isError: true, icon: '🔍' },
-      { id: 3, label: 'Step 3', text: 'Concluded Step 1 height = 21 cm.', isError: false, icon: '📝' },
-    ],
-    flawExplanation: 'Moving BACKWARD requires SUBTRACTING the common difference! Step 1 = 15 − 6 = 9, not 15 + 6 = 21. Dr. Voss made the classic "backward sign slip" — adding when she should have subtracted.',
-    corrections: [
-      { text: 'Subtract d: Step 1 = 15 − 6 = 9 cm', correct: true },
-      { text: 'Double the difference: 15 + 12 = 27', correct: false },
-      { text: 'Keep 21 — the pattern can have equal values', correct: false },
-    ],
-    realWorldLesson: 'In real archaeology, reversed-direction errors in dating sequences have led to artifacts being mislabeled by centuries!',
-  },
-  {
-    id: 2,
-    title: 'The Ledger Gap Trap',
-    caseFile: 'Suspect: Prof. Marcus Reed',
-    scenario: 'Prof. Reed\'s archive ledger shows: Position 2 = 12 items, Position 6 = 32 items. He claims Position 3 has 32 items (raw difference = 20, so T_3 = 12 + 20 = 32).',
-    evidence: {
-      pattern: 'Position 2 → 12, Position 6 → 32',
-      claimed: 'Position 3 = 32',
-      d: 'Claims d = 20',
-    },
-    steps: [
-      { id: 1, label: 'Step 1', text: 'Calculated raw difference: 32 − 12 = 20. ✓', isError: false, icon: '✅' },
-      { id: 2, label: 'Step 2', text: 'Used d = 20 directly (IGNORED that positions jumped by 4, not 1).', isError: true, icon: '🔍' },
-      { id: 3, label: 'Step 3', text: 'Calculated T_3 = 12 + 20 = 32.', isError: false, icon: '📝' },
-    ],
-    flawExplanation: 'The positions jump from 2 to 6 — that\'s 4 steps, not 1! You must divide: d = 20 ÷ 4 = 5 per position. So T_3 = 12 + 5 = 17, NOT 32.',
-    corrections: [
-      { text: 'Divide by position gap: d = 20 ÷ 4 = 5, so T_3 = 12 + 5 = 17', correct: true },
-      { text: 'Multiply 20 × 4 = 80 for d', correct: false },
-      { text: 'Average 12 and 32: (12 + 32) ÷ 2 = 22', correct: false },
-    ],
-    realWorldLesson: 'Museum cataloguers must always check whether records are consecutive. Non-consecutive ledger entries are a common trap in inventory audits!',
-  },
-  {
-    id: 3,
-    title: 'The Marathon Walker',
-    caseFile: 'Suspect: Apprentice Jun Li',
-    scenario: 'Jun Li needed to restore the 35th marker on a desert highway (T_1 = 4, d = +3). He manually added +3 thirty-four times on scratch paper, taking 20 minutes and getting 103 (wrong!).',
-    evidence: {
-      pattern: 'T_1 = 4, d = +3, target: position 35',
-      claimed: 'T_35 = 103 (after 34 manual additions)',
-      d: '+3',
-    },
-    steps: [
-      { id: 1, label: 'Step 1', text: 'Correctly identified a = 4 and d = +3. ✓', isError: false, icon: '✅' },
-      { id: 2, label: 'Step 2', text: 'Chose to manually add +3 thirty-four times instead of using the general term formula.', isError: true, icon: '🔍' },
-      { id: 3, label: 'Step 3', text: 'After 20 minutes of manual additions, arrived at 103 (with accumulated arithmetic errors).', isError: false, icon: '📝' },
-    ],
-    flawExplanation: '34 manual steps is absurdly inefficient (threshold is ≤ 3)! The general term gives the answer in seconds: T_35 = 4 + (35-1)×3 = 4 + 102 = 106. Jun Li also made arithmetic errors along the way, getting 103 instead.',
-    corrections: [
-      { text: 'Use General Term: T_35 = 4 + 34×3 = 4 + 102 = 106', correct: true },
-      { text: 'Double the step: add +6 seventeen times', correct: false },
-      { text: 'Subtract 35 from 4 to get −31', correct: false },
-    ],
-    realWorldLesson: 'In GPS surveying, engineers use formulas for kilometer markers — nobody walks the entire highway counting each one!',
-  },
-];
+import { EFFICIENCY_THRESHOLD } from '../../utils/restorationMath.js';
 
 export default function TheForgersFakeRestoration({ onComplete, audioEnabled }) {
   const { narrate, stopAll, sounds } = useAudio(audioEnabled);
 
-  const [caseIdx, setCaseIdx] = useState(0);
-  const [selectedStep, setSelectedStep] = useState(null);
-  const [selectedFix, setSelectedFix] = useState(null);
-  const [solvedCases, setSolvedCases] = useState([]);
+  const [stage, setStage] = useState('briefing');
+  const [gapIdx, setGapIdx] = useState(0);
+  const [selectedTool, setSelectedTool] = useState(null);
+  const [userAnswer, setUserAnswer] = useState('');
+  const [crossVerify, setCrossVerify] = useState('');
   const [feedback, setFeedback] = useState(null);
-  const [showExplanation, setShowExplanation] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [restored, setRestored] = useState([false, false, false]);
+  const [errorAnswer, setErrorAnswer] = useState(null);
+  const [errorFeedback, setErrorFeedback] = useState(null);
 
-  const activeCase = FORGERY_CASES[caseIdx];
+  // The ancient scroll: a=4, d=5
+  // Known terms: T1=4, T2=9, T3=14, T5=24
+  // Missing: T4=19, T8=39, T30=149
+  const scroll = {
+    a: 4, d: 5,
+    title: 'The Grand Archive\'s Ancient Number Scroll',
+    context: 'Kavya and Hafiz discovered a damaged scroll in the Grand Archive. The sequence starts: 4, 9, 14, ?, 24, ... with several entries missing. Use EVERYTHING you\'ve learned to restore it!',
+  };
 
-  function handleSelectStep(step) {
-    sounds.click();
-    setSelectedStep(step);
-    setSelectedFix(null);
-    setFeedback(null);
-    setShowExplanation(false);
-  }
+  const GAPS = [
+    {
+      id: 0,
+      title: 'Gap 1: Position 4 (Easy — Near Gap)',
+      gapPos: 4,
+      answer: 19,
+      stepsFromNearest: 1,
+      nearestKnown: { pos: 3, val: 14 },
+      bestTool: 'term-to-term',
+      explanation: 'Position 4 is just 1 step from position 3 (value 14). Add d=+5: 14 + 5 = 19.',
+      ttCalc: '14 + 5 = 19',
+      gtCalc: 'T_4 = 4 + (4−1)×5 = 4 + 15 = 19',
+      icon: '🟢',
+      difficulty: 'Easy',
+    },
+    {
+      id: 1,
+      title: 'Gap 2: Position 8 (Medium — Far Gap)',
+      gapPos: 8,
+      answer: 39,
+      stepsFromNearest: 3,
+      nearestKnown: { pos: 5, val: 24 },
+      bestTool: 'general-term',
+      explanation: 'Position 8 is 3 steps from position 5. Right at the boundary! The formula is safer: T_8 = 4 + 7×5 = 39.',
+      ttCalc: '24 + 5 + 5 + 5 = 39',
+      gtCalc: 'T_8 = 4 + (8−1)×5 = 4 + 35 = 39',
+      icon: '🟡',
+      difficulty: 'Medium',
+    },
+    {
+      id: 2,
+      title: 'Gap 3: Position 30 (Hard — Very Far Gap)',
+      gapPos: 30,
+      answer: 149,
+      stepsFromNearest: 22,
+      nearestKnown: { pos: 8, val: 39 },
+      bestTool: 'general-term',
+      explanation: 'Position 30 is 22 steps from the nearest known! Only the formula works here: T_30 = 4 + 29×5 = 149.',
+      ttCalc: '39 + 5×22 = 39 + 110 = 149 (22 jumps!)',
+      gtCalc: 'T_30 = 4 + (30−1)×5 = 4 + 145 = 149',
+      icon: '🔴',
+      difficulty: 'Hard',
+    },
+  ];
 
-  function handleSelectFix(option) {
+  // Error detection: fake restoration to evaluate
+  const FAKE_RESTORATION = {
+    claim: 'A student claims that T_15 = 79 because they calculated: T_15 = 4 + 15 × 5 = 4 + 75 = 79',
+    error: 'They used n instead of (n−1)! Correct: T_15 = 4 + (15−1)×5 = 4 + 70 = 74',
+    correctAnswer: 74,
+    wrongAnswer: 79,
+    options: [
+      { text: 'T_15 = 74 — They forgot to subtract 1 from n. Correct: 4 + (15−1)×5 = 74', correct: true },
+      { text: 'T_15 = 79 — Their calculation is correct', correct: false },
+      { text: 'T_15 = 80 — They should have used 16 instead of 15', correct: false },
+    ],
+  };
+
+  function submitGap() {
     stopAll();
-    setSelectedFix(option);
+    const gap = GAPS[gapIdx];
+    const num = Number(userAnswer.trim());
+    const crossNum = crossVerify.trim() ? Number(crossVerify.trim()) : null;
 
-    if (!selectedStep) {
-      sounds.wrong();
-      setFeedback({ type: 'error', text: '⚠️ First, click the suspicious step in the case file!' });
-      return;
-    }
+    if (!selectedTool) { sounds.wrong(); setFeedback({ type: 'error', text: '⚠️ Choose a tool first!' }); return; }
+    if (isNaN(num) || userAnswer.trim() === '') { sounds.wrong(); setFeedback({ type: 'error', text: '⚠️ Enter your answer!' }); return; }
 
-    if (!selectedStep.isError) {
+    const isToolRight = selectedTool === gap.bestTool;
+    const isValRight = num === gap.answer;
+    const isCrossRight = crossNum === null || crossNum === gap.answer;
+
+    if (isValRight && isToolRight && isCrossRight) {
+      sounds.correct();
+      const newRestored = [...restored];
+      newRestored[gapIdx] = true;
+      setRestored(newRestored);
+      setFeedback({ type: 'success', text: `🎉 ${gap.explanation}` });
+
+      if (crossNum !== null) {
+        narrate([{ text: 'Cross-verification confirmed! Both methods agree!', style: 'celebration' }]);
+      }
+
+      setTimeout(() => {
+        if (gapIdx + 1 < GAPS.length) {
+          setGapIdx(i => i + 1);
+          resetInputs();
+        } else {
+          setStage('error-detection');
+          resetInputs();
+        }
+      }, 1800);
+    } else if (isValRight && !isToolRight) {
       sounds.wrong();
       setFeedback({
         type: 'error',
-        text: `Step "${selectedStep.label}" is actually mathematically correct! Look more carefully at the other steps.`,
+        text: `Correct value! But position ${gap.gapPos} is ${gap.stepsFromNearest} step(s) away. ${gap.bestTool === 'term-to-term' ? 'Term-to-Term' : 'Formula'} is better here!`,
       });
-      return;
-    }
-
-    if (option.correct) {
-      sounds.correct();
-      setFeedback({
-        type: 'success',
-        text: `🕵️ Forgery exposed! ${activeCase.flawExplanation}`,
-      });
-      setShowExplanation(true);
-      narrate([{ text: 'Brilliant detective work! The mathematical fraud has been corrected!', style: 'celebration' }]);
-
-      const newSolved = [...solvedCases, activeCase.id];
-      setSolvedCases(newSolved);
-
-      if (caseIdx + 1 < FORGERY_CASES.length) {
-        setTimeout(() => {
-          setCaseIdx(c => c + 1);
-          setSelectedStep(null);
-          setSelectedFix(null);
-          setFeedback(null);
-          setShowExplanation(false);
-        }, 2000);
-      } else {
-        setTimeout(() => setSuccess(true), 1500);
-      }
     } else {
       sounds.wrong();
-      setFeedback({ type: 'error', text: '❌ That correction doesn\'t fix the mathematical flaw. Try another approach!' });
+      setFeedback({ type: 'error', text: `❌ Hint: From position ${gap.nearestKnown.pos} (value ${gap.nearestKnown.val}), the gap at position ${gap.gapPos} is ${gap.stepsFromNearest} step(s) away. d = +${scroll.d}.` });
     }
   }
 
-  if (success) {
-    return (
-      <div className="station-wrap">
-        <div className="station-success anim-bounce-in" style={{ maxWidth: 520, margin: '40px auto' }}>
-          <span className="success-icon" style={{ fontSize: '3rem' }}>🕵️</span>
-          <p className="station-success-msg">
-            All 3 forgeries exposed! You caught backward sign slips, non-consecutive ledger traps, and inefficient marathon walks. You're a certified fraud inspector!
-          </p>
-          <div className="station-success-actions">
-            <button className="btn-green" onClick={onComplete}>Complete Station ✓</button>
-          </div>
-        </div>
-      </div>
-    );
+  function submitErrorDetection(option) {
+    stopAll();
+    if (option.correct) {
+      sounds.correct();
+      setErrorAnswer(option);
+      setErrorFeedback({ type: 'success', text: `🕵️ Correct! ${FAKE_RESTORATION.error}` });
+      narrate([{ text: 'Brilliant! You caught the classic n vs n-1 error!', style: 'celebration' }]);
+      setTimeout(() => setStage('complete'), 2000);
+    } else {
+      sounds.wrong();
+      setErrorFeedback({ type: 'error', text: '❌ Look carefully: did they use n or (n−1) in the formula?' });
+    }
+  }
+
+  function resetInputs() {
+    setSelectedTool(null);
+    setUserAnswer('');
+    setCrossVerify('');
+    setFeedback(null);
   }
 
   return (
-    <div className="station-wrap">
-      {/* Header */}
+    <div className="station-wrap sim-teaching-station">
       <div className="station-header">
-        <h3 className="station-title">🔍 Station D: Fraud Inspector Bureau</h3>
+        <h3 className="station-title">📜 Station D: The Scroll Restoration</h3>
         <div className="station-target-box">
-          <span className="station-target-label">Cases Solved:</span>
-          <span className="station-target-num">{solvedCases.length}/{FORGERY_CASES.length}</span>
+          <span className="station-target-label">
+            {stage === 'briefing' ? 'Briefing' : stage === 'restore' ? 'Restoring' : stage === 'error-detection' ? 'Error Check' : 'Complete'}
+          </span>
+          <span className="station-target-num">
+            {stage === 'restore' ? `${gapIdx + 1}/${GAPS.length}` : stage === 'error-detection' ? 'Final' : ''}
+          </span>
         </div>
       </div>
 
-      {/* Case File Banner */}
-      <div className="sim-story-banner" style={{ borderColor: 'rgba(239, 68, 68, 0.4)' }}>
-        <span className="sim-story-icon">🕵️</span>
-        <p className="sim-story-text">
-          <strong>{activeCase.caseFile}</strong> — {activeCase.scenario}
-        </p>
+      <div className="sim-teach-progress">
+        <div className="sim-teach-progress-track">
+          {['briefing', 'restore', 'error-detection', 'complete'].map((s, i) => (
+            <div key={s} className={`progress-segment ${s === stage ? 'current' : ['briefing', 'restore', 'error-detection', 'complete'].indexOf(stage) > i ? 'done' : ''}`}>
+              <span className="segment-label">{['📋 Brief', '🏺 Restore', '🔍 Inspect', '🏆 Done'][i]}</span>
+            </div>
+          ))}
+        </div>
       </div>
 
-      <div className="station-grid-2col">
-        {/* Left: Case File & Evidence */}
-        <div className="station-col-left">
-          <div className="station-panel-box">
-            <div className="case-title-row">
-              <span className="case-badge">Case #{caseIdx + 1}</span>
-              <h4 className="case-title-text">{activeCase.title}</h4>
+      {/* ─── BRIEFING ─── */}
+      {stage === 'briefing' && (
+        <div className="teach-content">
+          <div className="teach-card glass-card">
+            <h4 className="teach-title">📋 Mission Briefing</h4>
+            <p className="teach-body">{scroll.context}</p>
+
+            <div className="teach-sequence-area">
+              <h5 style={{ color: '#feca57', margin: '0 0 8px', fontWeight: 800 }}>The Damaged Scroll:</h5>
+              <div className="teach-number-line">
+                {[
+                  { pos: 1, val: 4 }, { pos: 2, val: 9 }, { pos: 3, val: 14 },
+                  { pos: 4, val: null }, { pos: 5, val: 24 },
+                ].map(t => (
+                  <div key={t.pos} className={`teach-tile ${t.val === null ? 'gap' : 'revealed'}`}>
+                    <span className="teach-pos-label">n={t.pos}</span>
+                    <div className={`teach-tile-box ${t.val === null ? 'gap-box' : ''}`}>
+                      <span className="teach-tile-val">{t.val !== null ? t.val : '?'}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p style={{ color: '#a0a0b8', fontSize: '0.88rem', textAlign: 'center', marginTop: 8 }}>
+                Also missing: positions <strong>8</strong> and <strong>30</strong>
+              </p>
             </div>
 
-            <div className="evidence-box">
-              <h5 className="evidence-title">📋 Evidence Summary</h5>
-              {Object.entries(activeCase.evidence).map(([key, val]) => (
-                <div key={key} className="evidence-row">
-                  <span className="evidence-label">{key}:</span>
-                  <span className="evidence-value">{val}</span>
+            <div className="teach-summary-box">
+              <div className="summary-rule"><span className="rule-icon">📏</span><span>a = {scroll.a} (first term), d = +{scroll.d} (common difference)</span></div>
+              <div className="summary-rule"><span className="rule-icon">🎯</span><span>Restore 3 gaps using the right tool for each</span></div>
+              <div className="summary-rule"><span className="rule-icon">🔍</span><span>Then detect an error in a fake restoration</span></div>
+            </div>
+
+            <div className="teach-nav">
+              <button className="btn btn-primary btn-lg" onClick={() => { sounds.click(); setStage('restore'); }}>
+                🏺 Begin Restoration!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── RESTORE ─── */}
+      {stage === 'restore' && (
+        <div className="teach-content">
+          <div className="teach-card glass-card">
+            <h4 className="teach-title">{GAPS[gapIdx].icon} {GAPS[gapIdx].title}</h4>
+
+            {/* Scroll progress indicator */}
+            <div className="scroll-progress-bar">
+              {GAPS.map((g, i) => (
+                <div key={i} className={`scroll-gap-indicator ${restored[i] ? 'restored' : i === gapIdx ? 'active' : ''}`}>
+                  <span className="sgi-icon">{restored[i] ? '✅' : g.icon}</span>
+                  <span className="sgi-label">n={g.gapPos}</span>
                 </div>
               ))}
             </div>
 
-            <h5 className="sub-instruction">🔍 Tap the step that contains the flawed reasoning:</h5>
-            <div className="suspect-steps-list">
-              {activeCase.steps.map(step => {
-                const isSelected = selectedStep?.id === step.id;
-                return (
-                  <button
-                    key={step.id}
-                    className={`suspect-step-card ${isSelected ? 'step-selected' : ''}`}
-                    onClick={() => handleSelectStep(step)}
-                  >
-                    <div className="step-tag-row">
-                      <span className="step-tag">{step.icon} {step.label}</span>
-                      {isSelected && <span className="inspect-pill">🔍 Inspecting</span>}
-                    </div>
-                    <p className="step-body-text">{step.text}</p>
-                  </button>
-                );
-              })}
+            {/* Key info */}
+            <div className="distance-indicator">
+              <span className="dist-text">
+                Gap at <strong>n={GAPS[gapIdx].gapPos}</strong> is <strong>{GAPS[gapIdx].stepsFromNearest} step(s)</strong> from n={GAPS[gapIdx].nearestKnown.pos} (value {GAPS[gapIdx].nearestKnown.val})
+              </span>
+              <span className={`dist-badge ${GAPS[gapIdx].stepsFromNearest <= EFFICIENCY_THRESHOLD ? 'near' : 'far'}`}>
+                {GAPS[gapIdx].stepsFromNearest <= EFFICIENCY_THRESHOLD ? '⚡ NEAR' : '📜 FAR'}
+              </span>
             </div>
+
+            <div className="teach-tip-box">
+              💡 Remember: a = {scroll.a}, d = +{scroll.d}. Choose the right tool based on how far the gap is!
+            </div>
+
+            {/* Tool Selection */}
+            <div className="tool-select-grid" style={{ marginBottom: 8 }}>
+              <button className={`tool-card-btn ${selectedTool === 'term-to-term' ? 'active-tool' : ''}`}
+                onClick={() => { sounds.click(); setSelectedTool('term-to-term'); }}>
+                <span className="tool-card-icon">🖌️</span>
+                <span className="tool-card-name">Term-to-Term</span>
+                <span className="tool-card-desc">Best for ≤ 3 steps</span>
+              </button>
+              <button className={`tool-card-btn ${selectedTool === 'general-term' ? 'active-tool' : ''}`}
+                onClick={() => { sounds.click(); setSelectedTool('general-term'); }}>
+                <span className="tool-card-icon">📜</span>
+                <span className="tool-card-name">General Term</span>
+                <span className="tool-card-desc">Best for &gt; 3 steps</span>
+              </button>
+            </div>
+
+            <div className="teach-answer-row">
+              <input type="number" value={userAnswer} onChange={(e) => setUserAnswer(e.target.value)}
+                placeholder={`T_${GAPS[gapIdx].gapPos} = ?`} className="teach-input" />
+              <input type="number" value={crossVerify} onChange={(e) => setCrossVerify(e.target.value)}
+                placeholder="Cross-verify (optional)" className="teach-input" style={{ maxWidth: 160 }} />
+              <button className="btn btn-primary" onClick={submitGap} disabled={!userAnswer}>🏺 Restore</button>
+            </div>
+
+            {feedback && (
+              <div className={`teach-feedback ${feedback.type}`}>{feedback.text}</div>
+            )}
           </div>
         </div>
+      )}
 
-        {/* Right: Guild Correction */}
-        <div className="station-col-right">
-          <div className="station-panel-box">
-            <h4 className="panel-subhead">⚖️ Select the Correct Fix:</h4>
-            <p className="panel-caption">
-              {selectedStep
-                ? `You flagged "${selectedStep.label}". Choose the correct Guild fix:`
-                : '👈 First, tap the suspicious step on the left.'}
-            </p>
+      {/* ─── ERROR DETECTION ─── */}
+      {stage === 'error-detection' && (
+        <div className="teach-content">
+          <div className="teach-card glass-card">
+            <h4 className="teach-title">🔍 Bonus: Spot the Error!</h4>
+            <p className="teach-body">All 3 gaps restored! But before the scroll is certified, check this student's work:</p>
+
+            <div className="error-claim-box">
+              <h5 className="error-claim-title">📝 Student's Claim:</h5>
+              <p className="error-claim-text">"{FAKE_RESTORATION.claim}"</p>
+            </div>
 
             <div className="correction-options-list">
-              {activeCase.corrections.map((opt, i) => (
-                <button
-                  key={i}
-                  className={`btn-correction ${selectedFix?.text === opt.text ? (opt.correct ? 'fix-correct' : 'fix-wrong') : ''}`}
-                  onClick={() => handleSelectFix(opt)}
-                  disabled={!selectedStep || success}
-                >
+              {FAKE_RESTORATION.options.map((opt, i) => (
+                <button key={i}
+                  className={`btn-correction ${errorAnswer?.text === opt.text ? (opt.correct ? 'fix-correct' : 'fix-wrong') : ''}`}
+                  onClick={() => submitErrorDetection(opt)}
+                  disabled={errorAnswer?.correct}>
                   <span className="fix-icon">⚖️</span>
                   <span className="fix-text">{opt.text}</span>
                 </button>
               ))}
             </div>
 
-            {feedback && (
-              <div className={`sandstorm-feedback ${feedback.type === 'success' ? 'feed-success' : 'feed-error'}`}>
-                {feedback.text}
-              </div>
-            )}
-
-            {showExplanation && (
-              <div className="real-world-lesson">
-                <span className="lesson-icon">🌍</span>
-                <p className="lesson-text">{activeCase.realWorldLesson}</p>
-              </div>
+            {errorFeedback && (
+              <div className={`teach-feedback ${errorFeedback.type}`}>{errorFeedback.text}</div>
             )}
           </div>
         </div>
-      </div>
+      )}
+
+      {/* ─── COMPLETE ─── */}
+      {stage === 'complete' && (
+        <div className="teach-content">
+          <div className="station-success anim-bounce-in" style={{ maxWidth: 560, margin: '20px auto' }}>
+            <span className="success-icon" style={{ fontSize: '3rem' }}>🏆</span>
+            <h4 className="teach-title" style={{ color: '#fcd34d' }}>All Stations Complete!</h4>
+            <p className="station-success-msg">
+              You've completed the full Simulation Phase! You learned to:
+            </p>
+            <div className="teach-summary-box">
+              <div className="summary-rule"><span className="rule-icon">🖌️</span><span>Station A: Find d and step term-to-term</span></div>
+              <div className="summary-rule"><span className="rule-icon">📜</span><span>Station B: Use T_n = a + (n−1)×d for far gaps</span></div>
+              <div className="summary-rule"><span className="rule-icon">⚡</span><span>Station C: Choose the right tool (≤3 = step, &gt;3 = formula)</span></div>
+              <div className="summary-rule"><span className="rule-icon">🔍</span><span>Station D: Apply all skills & detect errors</span></div>
+            </div>
+            <div className="station-success-actions">
+              <button className="btn-green" onClick={onComplete}>Ready for Practice! 🎮</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
