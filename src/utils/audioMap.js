@@ -1,16 +1,45 @@
 // src/utils/audioMap.js
-// Static asset mapping for offline generated narration phrases in ScrollQuest (Grade 7 Math)
+// Auto-generated static asset mapping for ElevenLabs narration audio in ScrollQuest
 
 export const audioMap = {
-  // Pre-mapped phrases for ScrollQuest
-  "Welcome to ScrollQuest! Deep within the ruins of the Grand Archive, ancient number-scrolls have worn away.": "/assets/audio/scroll_welcome.mp3",
-  "You already know two restoration tools: term-to-term checking and the general term formula.": "/assets/audio/scroll_two_tools.mp3",
-  "Which restoration tool do you reach for first to restore each piece fastest and most reliably?": "/assets/audio/scroll_which_tool.mp3",
-  "Let's enter the Guild workshop and investigate!": "/assets/audio/scroll_enter_guild.mp3",
-  "Spot on! The missing term is certified! 🏺": "/assets/audio/scroll_correct.mp3",
-  "Outstanding! Three artifacts restored in a row! ⭐": "/assets/audio/scroll_streak_3.mp3",
-  "Incredible restoration streak! You are an excavation legend! 🔥": "/assets/audio/scroll_streak_5.mp3",
-  "Spectacular archaeological work! You have certified this ancient world! 🏆": "/assets/audio/scroll_world_complete.mp3",
+  "Welcome to ScrollQuest! Deep within the ruins of the Grand Archive, ancient number-scrolls have worn away.": "/assets/audio/scroll_01_welcome_to_scrollquest_deep_with.mp3",
+  "You already know two restoration tools: term-to-term checking and the general term formula.": "/assets/audio/scroll_02_you_already_know_two_restoration.mp3",
+  "Which restoration tool do you reach for first to restore each piece fastest and most reliably?": "/assets/audio/scroll_03_which_restoration_tool_do_you_re.mp3",
+  "Let's enter the Guild workshop and investigate!": "/assets/audio/scroll_04_lets_enter_the_guild_workshop_an.mp3",
+  "Deep within the ruins of the Grand Archive, apprentices Kavya and Hafiz were assigned their very first joint restoration.": "/assets/audio/scroll_05_deep_within_the_ruins_of_the_gra.mp3",
+  "Crucial numbers had flaked away into dust.": "/assets/audio/scroll_06_crucial_numbers_had_flaked_away_.mp3",
+  "Let's derive the general term formula T_n = an + b, Kavya insisted.": "/assets/audio/scroll_07_lets_derive_the_general_term_for.mp3",
+  "Hafiz shook his head: Look at the first gap — it is right between two known numbers! A quick term-to-term jump takes three seconds!": "/assets/audio/scroll_08_hafiz_shook_his_head_look_at_the.mp3",
+  "Relic the Tortoise plodded forward, peering through his magnifying spectacles.": "/assets/audio/scroll_09_relic_the_tortoise_plodded_forwa.mp3",
+  "You both carry true tools from the Guild. Hafiz carries term-to-term checking. Kavya carries the general term formula.": "/assets/audio/scroll_10_you_both_carry_true_tools_from_t.mp3",
+  "Neither tool is better in all cases. A master archaeologist knows that skill lies in reaching for the right tool at the right time.": "/assets/audio/scroll_11_neither_tool_is_better_in_all_ca.mp3",
+  "Here is the Guild's sacred efficiency rule, Relic taught.": "/assets/audio/scroll_12_here_is_the_guilds_sacred_effici.mp3",
+  "If a gap is close — within three positions of a known number — term-to-term checking is lightning fast!": "/assets/audio/scroll_13_if_a_gap_is_close_within_three_p.mp3",
+  "If the gap is far away, or in a scattered ledger, deriving the general term formula is far faster.": "/assets/audio/scroll_14_if_the_gap_is_far_away_or_in_a_s.mp3",
+  "And remember: a restoration is never certified until you cross-verify your answer, checking your answer two different ways!": "/assets/audio/scroll_15_and_remember_a_restoration_is_ne.mp3",
+  "Working in tandem, Kavya and Hafiz inspected the ancient scroll.": "/assets/audio/scroll_16_working_in_tandem_kavya_and_hafi.mp3",
+  "For position 4, right next to position 3, Hafiz stepped forward with term-to-term checking.": "/assets/audio/scroll_17_for_position_4_right_next_to_pos.mp3",
+  "For position 25, Kavya calculated T_25 using the general term formula in a single calculation!": "/assets/audio/scroll_18_for_position_25_kavya_calculated.mp3",
+  "Both restorers cross-verified each other's terms. The Grand Archivist stamped the parchment with the gold Guild Seal of Certification!": "/assets/audio/scroll_19_both_restorers_crossverified_eac.mp3",
+  "Welcome to Station A — The Pattern Lab!": "/assets/audio/scroll_20_welcome_to_station_a_the_pattern.mp3",
+  "Discover how number sequences grow, calculate the common difference d, and master term-to-term stepping with visual jump arrows!": "/assets/audio/scroll_21_discover_how_number_sequences_gr.mp3",
+  "Welcome to Station B — The Formula Builder!": "/assets/audio/scroll_22_welcome_to_station_b_the_formula.mp3",
+  "When stepping takes too long, we need a formula! Discover how Tn = a + (n minus 1) times d works with our interactive derivation lab and calculator!": "/assets/audio/scroll_23_when_stepping_takes_too_long_we_.mp3",
+  "Welcome to Station C — The Tool Workshop!": "/assets/audio/scroll_24_welcome_to_station_c_the_tool_wo.mp3",
+  "Now you have both tools! Practice the Guild's sacred efficiency rule: use stepping for nearby gaps, and the formula for far gaps, then cross-verify!": "/assets/audio/scroll_25_now_you_have_both_tools_practice.mp3",
+  "Welcome to Station D — The Scroll Restoration!": "/assets/audio/scroll_26_welcome_to_station_d_the_scroll_.mp3",
+  "Apply everything you've learned to restore the Grand Archive's ancient scroll, and inspect student claims to catch mathematical flaws!": "/assets/audio/scroll_27_apply_everything_youve_learned_t.mp3",
+  "Incredible restoration streak! You are an excavation legend! 🔥": "/assets/audio/scroll_28_incredible_restoration_streak_yo.mp3",
+  "Outstanding! Three artifacts restored in a row! ⭐": "/assets/audio/scroll_29_outstanding_three_artifacts_rest.mp3",
+  "Spot on! The missing term is certified! 🏺": "/assets/audio/scroll_30_spot_on_the_missing_term_is_cert.mp3",
+  "Not quite — check the hint, inspect the step distance, and try again! 💡": "/assets/audio/scroll_31_not_quite_check_the_hint_inspect.mp3",
+  "Here is your first clue: inspect the distance from the nearest known term!": "/assets/audio/scroll_32_here_is_your_first_clue_inspect_.mp3",
+  "Here is your second clue: check whether term-to-term stepping or the general term formula gives the fastest, cleanest calculation.": "/assets/audio/scroll_33_here_is_your_second_clue_check_w.mp3",
+  "Spectacular archaeological work! You have certified this ancient world! 🏆": "/assets/audio/scroll_34_spectacular_archaeological_work_.mp3",
+  "The World Boss Battle begins! Answer correctly to restore the ancient relic and claim your badge! 👑": "/assets/audio/scroll_35_the_world_boss_battle_begins_ans.mp3",
+  "Victory! You defeated the World Boss and certified the ancient archive! 🏆": "/assets/audio/scroll_36_victory_you_defeated_the_world_b.mp3",
+  "Welcome to the Curator's Reflection! Let's review the two headline Guild habits: choosing the most efficient tool, and never skipping cross-verification.": "/assets/audio/scroll_37_welcome_to_the_curators_reflecti.mp3",
+  "Congratulations! You have completed the full ScrollQuest journey and unlocked your Master Restorer Trophy! 🏆": "/assets/audio/scroll_38_congratulations_you_have_complet.mp3"
 };
 
 export default audioMap;
