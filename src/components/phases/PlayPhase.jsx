@@ -1,7 +1,6 @@
 // src/components/phases/PlayPhase.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import './PlayPhase.css';
-import KingdomMap from '../gamification/KingdomMap.jsx';
 import QuestionRenderer from '../quiz/QuestionRenderer.jsx';
 import BossBattleModal from '../quiz/BossBattleModal.jsx';
 import FeedbackOverlay from '../shared/FeedbackOverlay.jsx';
@@ -19,7 +18,7 @@ import {
 
 export default function PlayPhase({ state, dispatch }) {
   const { narrate, stopAll, sounds } = useAudio(state?.audioEnabled ?? true);
-  const [showMap, setShowMap]       = useState(state?.currentQuestion === 0);
+  const [showMap, setShowMap]       = useState(true);
   const [hintsShown, setHintsShown] = useState(0);
   const [showHint, setShowHint]     = useState(false);
   const [showBoss, setShowBoss]     = useState(false);
@@ -32,6 +31,11 @@ export default function PlayPhase({ state, dispatch }) {
   const district = DISTRICTS[distIdx] || DISTRICTS[0];
   const qInDistrict = qIdx % 10;
   const isPlayDone = state?.phaseComplete?.play;
+
+  // Always show Worlds Board when entering Practice phase
+  useEffect(() => {
+    setShowMap(true);
+  }, []);
 
   // Narrate question when question changes
   useEffect(() => {
@@ -178,7 +182,7 @@ export default function PlayPhase({ state, dispatch }) {
           {/* Header Row: Title & Subtitle on Left, Stars on Right */}
           <div className="worlds-card-header">
             <div className="worlds-title-group">
-              <h2 className="worlds-title">ScrollQuest Worlds</h2>
+              <h2 className="worlds-title">ScrollQuest Game Worlds</h2>
               <p className="worlds-subtitle">
                 10 Themed Worlds · Need 4/10 Correct to Unlock Next World
               </p>

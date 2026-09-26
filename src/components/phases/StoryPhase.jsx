@@ -10,6 +10,12 @@ import story2 from '../../assets/story/2.png';
 import story3 from '../../assets/story/3.png';
 import story4 from '../../assets/story/4.png';
 
+// These 4 files are placeholder art (see src/assets/story/ART_BRIEF.md) — no
+// illustrated art has been produced for this module yet. Each is a simple
+// dashed-frame placeholder at the reference architecture's exact image
+// dimensions (1376×768) so a real illustration can be dropped in later by
+// simply replacing the file — no component code changes needed. If an image
+// ever fails to load, the CSS-framed gradient/emoji fallback below takes over.
 const STORY_IMAGES = [story1, story2, story3, story4];
 
 function StoryImage({ panel }) {
@@ -23,13 +29,16 @@ function StoryImage({ panel }) {
   return (
     <div className="story-image-container">
       {!imgError && imageSrc ? (
-        <img
-          key={panel.panel}
-          src={imageSrc}
-          alt={panel.title}
-          onError={() => setImgError(true)}
-          className="story-full-img"
-        />
+        <>
+          <img
+            key={panel.panel}
+            src={imageSrc}
+            alt={panel.title}
+            onError={() => setImgError(true)}
+            className="story-full-img"
+          />
+          <div className="story-image-overlay" />
+        </>
       ) : (
         <div className="story-img-fallback" style={{ background: panel.imageBg }}>
           <span className="fallback-emoji">{panel.imageEmoji}</span>
@@ -101,7 +110,7 @@ export default function StoryPhase({ state, dispatch }) {
               <div className="character-avatar-circle">
                 <span className="character-emoji">{panel.characterEmoji || '👦'}</span>
               </div>
-              <span className="character-name">{panel.character || 'Kavya & Hafiz'}</span>
+              <span className="character-name">{panel.character || 'Farhan'}</span>
             </div>
           </div>
         </div>

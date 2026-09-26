@@ -52,32 +52,31 @@
   left: 16px;
   z-index: 200;
   pointer-events: auto;
-  background: rgba(22, 18, 48, 0.9);
-  border: 1.5px solid #f59e0b;
-  color: #fbbf24;
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 0.92rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  font-family: 'Fredoka', 'Nunito', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 0.88rem;
   border-radius: var(--radius-pill);
-  padding: 6px 16px;
+  padding: 5px 16px;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   transition: var(--transition-fast);
-  min-height: 36px;
+  min-height: 34px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
   white-space: nowrap;
 }
 
 .home-btn:hover {
-  background: rgba(245, 158, 11, 0.2);
-  border-color: #fcd34d;
-  color: #fcd34d;
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.45);
+  color: #ffffff;
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(245, 158, 11, 0.3);
 }
 
 .home-btn:active {
