@@ -28,33 +28,27 @@ export default function IntroScreen({ state, dispatch }) {
     <div className="intro-wrap">
       {/* Top Badge */}
       <div className="intro-top-badge">
-        ✨ Grade 7 Math · General &amp; Missing Terms · Archaeological Restoration Guild
+        ✨ Grade 7 Math · General &amp; Missing Terms
       </div>
 
       {/* Main Title */}
       <h1 className="intro-title">
-        <span className="text-orange" style={{ color: 'var(--gold)' }}>Scroll</span> <span className="text-white">Quest</span>
+        <span className="text-orange">Scroll</span> <span className="text-white">Quest</span>
       </h1>
-      <h2 className="intro-subtitle">ScrollQuest · Master General &amp; Missing Terms with Strategic Tool Selection</h2>
+      <h2 className="intro-subtitle">Master General &amp; Missing Terms with Strategic Tool Selection</h2>
 
       {/* Mascot Row */}
       <div className="intro-mascot-row">
         <div className="intro-mascot-circle">🐢</div>
         <div className="intro-speech-bubble">
           Greetings, apprentice restorer! I am Relic the Tortoise.<br />
-          Ancient scrolls have lost their numbers — which restoration tool will you reach for first? 📜🏺
+          Ancient scrolls have lost their numbers — which tool will you reach for first? 📜🏺
         </div>
       </div>
 
-      {/* Description */}
-      <p className="intro-desc">
-        Master when to reach for lightning-fast term-to-term checking and when to deploy the general term formula.
-        Restore early, middle, and far gaps, conquer non-consecutive ledgers, and cross-verify every ancient artifact!
-      </p>
-
       {/* Journey Card */}
       <div className="journey-card">
-        <div className="journey-card-title">YOUR RESTORATION JOURNEY · CLICK ANY PHASE TO ENTER</div>
+        <div className="journey-card-title">YOUR RESTORATION JOURNEY · CLICK ANY PHASE TO START</div>
 
         <div className="journey-steps-container">
           <div className="journey-row top-row">
@@ -101,22 +95,32 @@ export default function IntroScreen({ state, dispatch }) {
         </div>
       </div>
 
-      {/* Action Buttons */}
-      <div className="intro-actions-row">
-        {hasSaved ? (
-          <>
-            <button className="btn btn-primary btn-lg" onClick={resumeSession}>
-              Resume Restoration 📜
-            </button>
-            <button className="btn btn-outline btn-lg" onClick={startFresh}>
-              Start Fresh 🔄
-            </button>
-          </>
-        ) : (
-          <button className="btn btn-primary btn-lg" onClick={startFresh}>
-            Enter the Grand Archive 🏛️
+      {/* Actions */}
+      <div className="intro-ctas">
+        <button className="btn btn-primary btn-lg intro-cta-main" onClick={startFresh}>
+          🏛️ Enter the Grand Archive
+        </button>
+        {hasSaved && (
+          <button className="btn btn-outline" onClick={resumeSession} style={{ marginTop: '4px' }}>
+            ↩ Resume Session
           </button>
         )}
+      </div>
+
+      {/* Bottom Cards */}
+      <div className="intro-bottom-cards">
+        <div className="bottom-card">
+          <div className="bottom-card-icon" style={{ color: '#ff6b6b' }}>🎯</div>
+          <div>100 Questions</div>
+        </div>
+        <div className="bottom-card">
+          <div className="bottom-card-icon" style={{ color: '#feca57' }}>📜</div>
+          <div>Scrolls & Artifacts</div>
+        </div>
+        <div className="bottom-card">
+          <div className="bottom-card-icon" style={{ color: '#66bb6a' }}>✨</div>
+          <div>Badges & XP</div>
+        </div>
       </div>
     </div>
   );
