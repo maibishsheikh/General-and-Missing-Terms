@@ -195,6 +195,7 @@ export default function PlayPhase({ state, dispatch }) {
           </div>
 
           {/* 10 Worlds Grid (5 columns x 2 rows) */}
+          {/* 10 Worlds Grid (5 columns x 2 rows) */}
           <div className="worlds-grid">
             {DISTRICTS.map((dist, idx) => {
               const isCurrent = idx === distIdx;
@@ -221,15 +222,20 @@ export default function PlayPhase({ state, dispatch }) {
                   <div className="world-card-center">
                     {isUnlocked ? (
                       <div className="world-target-icon">
-                        <svg width="34" height="34" viewBox="0 0 36 36" fill="none">
-                          <circle cx="18" cy="18" r="14" stroke="#00d26a" strokeWidth="2.5" />
-                          <circle cx="18" cy="18" r="8" stroke="#00d26a" strokeWidth="2.5" />
-                          <circle cx="18" cy="18" r="3" fill="#00d26a" />
+                        <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
+                          <circle cx="18" cy="18" r="13" stroke="#00e5a3" strokeWidth="2.4" />
+                          <circle cx="18" cy="18" r="7.5" stroke="#00e5a3" strokeWidth="2.4" />
+                          <circle cx="18" cy="18" r="2.8" fill="#00e5a3" />
                         </svg>
                       </div>
                     ) : (
                       <div className="world-lock-icon">
-                        🔒
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                          <path d="M7 10V7C7 4.23858 9.23858 2 12 2C14.7614 2 17 4.23858 17 7V10" stroke="#94a3b8" strokeWidth="2.2" strokeLinecap="round" />
+                          <rect x="4" y="9.5" width="16" height="12.5" rx="3.5" fill="#f59e0b" />
+                          <circle cx="12" cy="15" r="1.4" fill="#78350f" />
+                          <path d="M12 16.4V18.2" stroke="#78350f" strokeWidth="1.4" strokeLinecap="round" />
+                        </svg>
                       </div>
                     )}
                     <span className="world-name">{dist.name}</span>
@@ -253,14 +259,14 @@ export default function PlayPhase({ state, dispatch }) {
               className="btn-boss-battle"
               onClick={() => setShowBoss(true)}
             >
-              <span>👑</span> Boss Battle: {district.boss?.name || 'The Crumbling Fragment'}
+              <span className="btn-icon">👑</span> Boss Battle: {district.boss?.name || 'The Definition Keeper'}
             </button>
 
             <button
               className="btn-jump-reflect"
               onClick={() => dispatch({ type: 'SET_PHASE', payload: 'reflect' })}
             >
-              <span>📓</span> Jump to Reflect Phase →
+              <span className="btn-icon">🗂️</span> Jump to Reflect Phase →
             </button>
           </div>
         </div>

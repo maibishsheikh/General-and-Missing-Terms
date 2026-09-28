@@ -109,47 +109,46 @@
 }
 
 /* ─── Worlds Board Map Screen (Reference Layout) ────────────────────────── */
+/* ─── Worlds Board Map Screen (Reference Layout) ────────────────────────── */
 .play-map-wrap {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: clamp(8px, 1.5vh, 20px) 16px;
+  padding: 12px 16px;
   width: 100%;
-  height: 100%;
-  max-height: 100%;
   box-sizing: border-box;
-  overflow: hidden;
 }
 
 .worlds-board-card {
-  width: 100%;
-  max-width: 1020px;
-  background: #11162d;
+  width: min(94vw, 1020px);
+  background: #10162e;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 26px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55), 0 0 40px rgba(0, 210, 106, 0.03);
-  padding: clamp(14px, 2vh, 22px) clamp(18px, 2.5vw, 32px);
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  padding: 18px 26px 20px 26px;
   display: flex;
   flex-direction: column;
-  gap: clamp(10px, 1.5vh, 16px);
+  gap: 12px;
   box-sizing: border-box;
   position: relative;
+  margin: auto;
 }
 
 .worlds-board-card,
 .worlds-board-card * {
   font-family: 'Fredoka', 'Nunito', system-ui, -apple-system, sans-serif;
+  box-sizing: border-box;
 }
 
 /* Glowing Green Top Notch */
 .worlds-card-notch {
-  width: 62px;
+  width: 52px;
   height: 4px;
-  background: #00d26a;
+  background: #00e5a3;
   border-radius: 999px;
-  box-shadow: 0 0 12px rgba(0, 210, 106, 0.8);
-  margin: 0 auto 6px;
+  box-shadow: 0 0 12px rgba(0, 229, 163, 0.85);
+  margin: 0 auto 8px;
   flex-shrink: 0;
 }
 
@@ -170,30 +169,31 @@
 }
 
 .worlds-title {
-  font-size: clamp(1.35rem, 1.8vw, 1.8rem);
-  font-weight: 800;
+  font-size: 1.55rem;
+  font-weight: 700;
   color: #2dd4bf;
   margin: 0;
+  line-height: 1.2;
   letter-spacing: -0.2px;
 }
 
 .worlds-subtitle {
-  font-size: clamp(0.82rem, 0.95vw, 0.92rem);
+  font-size: 0.84rem;
   color: #94a3b8;
   font-weight: 500;
-  margin: 0;
+  margin: 2px 0 0 0;
 }
 
 .worlds-stars-pill {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.45);
   border: 1px solid rgba(255, 255, 255, 0.12);
   padding: 5px 16px;
   border-radius: 999px;
-  font-weight: 800;
-  font-size: clamp(0.88rem, 0.98vw, 0.95rem);
+  font-weight: 700;
+  font-size: 0.9rem;
   color: #ffffff;
   flex-shrink: 0;
 }
@@ -201,48 +201,49 @@
 .worlds-stars-pill .star-icon {
   color: #facc15;
   font-size: 1.05rem;
+  line-height: 1;
 }
 
 /* 10 Worlds Grid (5 cols x 2 rows) */
 .worlds-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: clamp(9px, 1.2vw, 14px);
+  gap: 12px;
   width: 100%;
 }
 
 .world-card {
-  background: rgba(22, 28, 54, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: #131932;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 14px;
-  padding: clamp(9px, 1.3vh, 13px) clamp(10px, 1vw, 14px);
+  padding: 10px 10px 10px 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  min-height: clamp(118px, 15vh, 140px);
+  height: 116px;
   text-align: center;
-  transition: all 0.22s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   user-select: none;
   box-sizing: border-box;
   position: relative;
 }
 
 .world-card.active {
-  border: 1.5px solid #00d26a;
-  background: rgba(0, 210, 106, 0.03);
-  box-shadow: 0 0 16px rgba(0, 210, 106, 0.2);
+  border: 1.5px solid #00e5a3;
+  background: rgba(0, 229, 163, 0.03);
+  box-shadow: 0 0 14px rgba(0, 229, 163, 0.22);
   cursor: pointer;
 }
 
 .world-card.active:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(0, 210, 106, 0.35);
+  box-shadow: 0 4px 18px rgba(0, 229, 163, 0.35);
 }
 
 .world-card.completed {
   border-color: rgba(34, 197, 94, 0.35);
-  background: rgba(34, 197, 94, 0.05);
+  background: rgba(34, 197, 94, 0.04);
   cursor: pointer;
 }
 
@@ -252,7 +253,7 @@
 }
 
 .world-card.locked {
-  opacity: 0.65;
+  opacity: 0.92;
   cursor: not-allowed;
 }
 
@@ -262,19 +263,24 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  line-height: 1;
 }
 
 .world-badge-w {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.06);
   border-radius: 4px;
-  padding: 2px 7px;
-  font-size: 0.75rem;
-  font-weight: 800;
+  padding: 2.5px 7px;
+  font-size: 0.72rem;
+  font-weight: 700;
   color: #ffffff;
 }
 
+.world-card.locked .world-badge-w {
+  color: #8fa1b9;
+}
+
 .world-badge-q {
-  font-size: 0.75rem;
+  font-size: 0.74rem;
   font-weight: 700;
   color: #38bdf8;
 }
@@ -285,38 +291,42 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 3px;
   width: 100%;
-  margin: auto 0;
+  flex: 1;
+  min-height: 0;
+  margin: 2px 0;
 }
 
 .world-target-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 36px;
-  filter: drop-shadow(0 0 8px rgba(0, 210, 106, 0.45));
+  height: 28px;
+  filter: drop-shadow(0 0 6px rgba(0, 229, 163, 0.45));
 }
 
 .world-lock-icon {
-  font-size: 1.5rem;
-  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+  height: 26px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 .world-name {
-  font-size: clamp(0.82rem, 0.95vw, 0.92rem);
-  font-weight: 800;
+  font-size: 0.82rem;
+  font-weight: 700;
   color: #ffffff;
-  line-height: 1.25;
-  margin: 4px 0 0 0;
+  line-height: 1.2;
+  margin: 2px 0 0 0;
   max-width: 100%;
-  white-space: nowrap;
+  text-align: center;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
+  word-break: break-word;
 }
 
 /* Bottom Action */
@@ -325,12 +335,13 @@
   align-items: center;
   justify-content: center;
   width: 100%;
+  line-height: 1;
 }
 
 .world-action-play {
-  color: #00d26a;
-  font-weight: 800;
-  font-size: 0.88rem;
+  color: #00e5a3;
+  font-weight: 700;
+  font-size: 0.82rem;
   transition: transform 0.2s ease;
   display: inline-block;
 }
@@ -341,7 +352,7 @@
 
 .world-action-locked {
   color: #64748b;
-  font-size: 0.78rem;
+  font-size: 0.74rem;
   font-weight: 600;
 }
 
@@ -358,12 +369,12 @@
 
 .btn-boss-battle {
   background: rgba(245, 158, 11, 0.08);
-  border: 1px solid rgba(245, 158, 11, 0.6);
+  border: 1px solid rgba(245, 158, 11, 0.5);
   color: #fbbf24;
   border-radius: 999px;
   padding: 7px 22px;
-  font-weight: 800;
-  font-size: 0.88rem;
+  font-weight: 700;
+  font-size: 0.84rem;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
@@ -372,7 +383,7 @@
 }
 
 .btn-boss-battle:hover {
-  background: rgba(245, 158, 11, 0.2);
+  background: rgba(245, 158, 11, 0.18);
   border-color: #f59e0b;
   transform: translateY(-1px);
   box-shadow: 0 0 14px rgba(245, 158, 11, 0.3);
@@ -380,12 +391,12 @@
 
 .btn-jump-reflect {
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   color: #cbd5e1;
   border-radius: 999px;
   padding: 7px 22px;
   font-weight: 700;
-  font-size: 0.88rem;
+  font-size: 0.84rem;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
@@ -400,7 +411,33 @@
   transform: translateY(-1px);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
+  .worlds-board-card {
+    padding: 14px 16px 16px 16px;
+    gap: 10px;
+  }
+  .worlds-grid {
+    gap: 8px;
+  }
+  .world-card {
+    height: 110px;
+    padding: 8px 6px;
+  }
+  .world-name {
+    font-size: 0.74rem;
+  }
+  .world-badge-w,
+  .world-badge-q {
+    font-size: 0.68rem;
+  }
+  .btn-boss-battle,
+  .btn-jump-reflect {
+    font-size: 0.78rem;
+    padding: 6px 16px;
+  }
+}
+
+@media (max-width: 640px) {
   .worlds-grid {
     grid-template-columns: repeat(2, 1fr);
   }
